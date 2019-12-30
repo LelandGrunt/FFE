@@ -105,7 +105,6 @@ Hint: The folder where the FFE file is located is used as a root folder for FFE.
 For the Alpha Vantage provider, a API key is mandatory.
 
 1. Get a free Alpha Vantage API Key [here](https://www.alphavantage.co/support/#api-key) (only e-mail is required).
-
 2. Set the Alpha Vantage API Key via the `Set API Key` button in the new ribbon tab `FFE`.
    
    
