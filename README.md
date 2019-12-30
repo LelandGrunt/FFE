@@ -119,7 +119,7 @@ For the Alpha Vantage provider, a API key is mandatory.
 * Excel 2016 (32-/64-bit)
 * Excel 2019 (64-bit)
 
-For Excel 2003 no ribbon interface is available. Use and edit the [FFEx32.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx32.xll.config) respectively the [FFEx64.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx64.xll.config) file to set the [FFE options](https://github.com/LelandGrunt/FFE/wiki/Ribbon_Options) (incl. Alpha Vantage API Key). Save the file in the FFE root folder where the FFE Add-in (FFEx32|FFEx64.xll) is located. Because of missing ribbon interface, the [AVQ Batch Query](https://github.com/LelandGrunt/FFE/wiki/AVQ-Batch-Query) is also not availbable.
+For Excel 2003 no ribbon interface is available. Use and edit the [FFEx32.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx32.xll.config) respectively the [FFEx64.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx64.xll.config) file to set the [FFE options](https://github.com/LelandGrunt/FFE/wiki/Ribbon_Options) (incl. Alpha Vantage API Key). Save the file in the FFE root folder where the FFE Add-in (FFEx32|FFEx64.xll) is located. Because of missing ribbon interface, the [AVQ Batch Query](https://github.com/LelandGrunt/FFE/wiki/AVQ-Batch-Query) is also not available.
 
 
 
