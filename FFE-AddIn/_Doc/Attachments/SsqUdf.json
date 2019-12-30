@@ -1,0 +1,80 @@
+{
+  "Version": "1.0",
+  "Version Date": "2019-12-29T00:00Z",
+  "Meta Data": {
+    "QueryInformation": {
+      "Name": "Name of User Defined Function (UDF). Mandatory.",
+      "Description": "Description of UDF (max. 30 characters). Shown in Excel function dialog. Mandatory.",
+      "Author": "Author who wrotes this UDF query specification. Shown in Excel function dialog. Mandatory.",
+      "Author Email": "Authors email. Shown in Excel function dialog. Mandatory.",
+      "Version": "Version of UDF specification. Used to determine UDF specification updates. Shown in Excel function dialog. (Format: MAJOR.MINOR)",
+      "Version Date": "Date of UDF specification. Used to determine UDF specification updates. Shown in Excel function dialog. (Format: YYYY-MM-DD)",
+      "Help Topic": "Link to UDF help. Linked with/Used in Excel function dialog. (Format: http(s)://)",
+      "Help Link": "Link to authors UDF help site. (Format: http(s)://)",
+      "Provider": "Source of UDF query result. Shown in Excel function dialog.",
+      "Enabled": "Register query as UDF? (Format: true/false)",
+      "ExcelArgNameStockIdentifier": "Name of UDF argument for stock identifier. Shown in Excel function dialog.",
+      "ExcelArgDescStockIdentifier": "Description of UDF argument for stock identifier. Shown in Excel function dialog.",
+      "Comment": "Internal comment. Used in this JSON file only."
+    },
+    "QueryParameter": {
+      "Url": "Mandatory. Url must contain StockIdentifierPlaceholder parameter value.",
+      "StockIdentifierPlaceholder": "Optional. Default: {ISIN_TICKER_WKN}",
+      "XPath": "Optional (Either XPath, CssSelector or RegExPattern parameter is mandatory. If all exists, then XPath is prioritized and evaluated first.)",
+      "CssSelector": "Optional (Either XPath, CssSelector or RegExPattern parameter is mandatory. If all exists, then XPath is prioritized and evaluated first.)",
+      "RegExPattern": "Optional (Either XPath, CssSelector or RegExPattern parameter is mandatory. If XPath or CssSelector exists, then regular expression is evaluated on XPath/CssSelector selection result.)",
+      "RegExGroupName": "Optional. Only used if RegExPattern parameter exists. Default: quote",
+      "RegExMatchIndex": "Optional. Only used if RegExPattern parameter exists. Default: 0",
+      "Locale": "Optional. Used to parse query result. Default: Locale of local computer. Must be a predefined CultureInfo identifier (.NET). Example: en-US.",
+      "Parser": "Optional. Valid values: HAP, AngleSharp, HttpClient, WebClient or Auto. Default: Auto"
+    }
+  },
+  "UDF": {
+    "MyProvider": {
+      "QueryInformation": {
+        "Name": "MySSQ",
+        "Description": "<Description>",
+        "Author": "<Author>",
+        "Author Email": "<Author Email>",
+        "Version": "<Version>",
+        "Version Date": "<Version Date>",
+        "Help Topic": "[Help Topic]",
+        "Help Link": "<Help Link>",
+        "Provider": "<Provider>",
+        "Enabled": true,
+        "ExcelArgNameStockIdentifier": "<ExcelArgNameStockIdentifier>",
+        "ExcelArgDescStockIdentifier": "<ExcelArgDescStockIdentifier>",
+        "Comment": "<Comment>"
+      },
+      "QueryParameter": {
+        "Url": "https://github.com/LelandGrunt/{Repository}",
+        "StockIdentifierPlaceholder": "{Repository}",
+        "XPath": "(//span[@class='num text-emphasized'])[4]",
+        "CssSelector": "main#js-repo-pjax-container>div:nth-of-type(2)>div>div:nth-of-type(4)>ul>li:nth-of-type(4)>a>span"
+      }
+    },
+    "Google": {
+      "QueryInformation": {
+        "Name": "QGF",
+        "Description": "Function to get the stock price value from the Google website (Google Finance).",
+        "Author": "Leland Grunt",
+        "Author Email": "leland.grunt@gmail.com",
+        "Version": "0.9",
+        "Version Date": "2019-12-29",
+        "Help Topic": "https://github.com/LelandGrunt/FFE",
+        "Help Link": "https://github.com/LelandGrunt/FFE",
+        "Provider": "Google Finance",
+        "Enabled": true,
+        "ExcelArgNameStockIdentifier": "Ticker",
+        "ExcelArgDescStockIdentifier": "Ticker",
+        "Comment": "Under development."
+      },
+      "QueryParameter": {
+        "Url": "https://www.google.com/search?q={Ticker}",
+        "StockIdentifierPlaceholder": "{Ticker}",
+        "XPath": "//span[contains(@class,'IsqQVc NprOob')]",
+        "Locale": "de-DE"
+      }
+    }
+  }
+}

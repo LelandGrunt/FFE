@@ -1,0 +1,20 @@
+<Project ToolsVersion="4.0" DefaultTargets="Release" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="TransformXml"
+             AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v15.0\Web\Microsoft.Web.Publishing.Tasks.dll"/>
+
+  <Target Name="Debug">
+    <TransformXml Source=".\..\app.Default.config"
+                  Transform=".\..\app.Debug.config"
+                  Destination=".\..\app.config"/>
+  </Target>
+  <Target Name="Test">
+    <TransformXml Source=".\..\app.Default.config"
+                  Transform=".\..\app.Test.config"
+                  Destination=".\..\app.config"/>
+  </Target>
+  <Target Name="Release">
+    <TransformXml Source=".\..\app.Default.config"
+                  Transform=".\..\app.Release.config"
+                  Destination=".\..\app.config"/>
+  </Target>
+</Project>

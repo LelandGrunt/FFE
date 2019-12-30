@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FFE" GeneratedClassName="SsqSetting">
+  <Profiles />
+  <Settings>
+    <Setting Name="JsonFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SsqUdf.json</Value>
+    </Setting>
+    <Setting Name="AutoUpdate" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="JsonUri" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://github.com/LelandGrunt/FFE/raw/master/FFE-AddIn/SSQ/SsqUdf.json</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

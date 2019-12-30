@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FFE" GeneratedClassName="CbqSetting">
+  <Profiles />
+  <Settings>
+    <Setting Name="QCB_URL" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://www.consorsbank.de/Wertpapierhandel/Fonds/Kurs-Snapshot/snapshotoverview/{ISIN_WKN}</Value>
+    </Setting>
+    <Setting Name="QCB_Price_RegEx_Pattern" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">&lt;strong class=.price price-minus|plus.&gt;.*?(?&lt;price&gt;\d*,\d*)&lt;/strong&gt;.*?&lt;span class="currency"&gt;(?&lt;currency&gt;.*?)&lt;/span&gt;</Value>
+    </Setting>
+    <Setting Name="QCB_Price_RegEx_GroupNamePrice" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">price</Value>
+    </Setting>
+    <Setting Name="QCB_Price_RegEx_MatchIndex" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="EnableLogging" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="QCB_Price_RegEx_GroupNameCurrency" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">currency</Value>
+    </Setting>
+    <Setting Name="QCB_Price_NumberFormat" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">#,##0.00 [${CURRENCY}]</Value>
+    </Setting>
+    <Setting Name="QCB_Price_XPath_Price" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">//strong[starts-with(@class,'price price-')]</Value>
+    </Setting>
+    <Setting Name="QCB_Price_XPath_Currency" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">//span[@class='currency']</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="Serilog.Events.LogEventLevel" Scope="User">
+      <Value Profile="(Default)">Information</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

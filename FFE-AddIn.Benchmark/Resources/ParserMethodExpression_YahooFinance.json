@@ -1,0 +1,24 @@
+{
+  "Provider": {
+    "Name": "Yahoo_Finance",
+    "Url": "https://finance.yahoo.com/quote/MSFT"
+  },
+  "WebParsers": [ "HAP", "AngleSharp", "HttpClient" ],
+  "WebParserMethods": [ "XPath", "CssSelector", "RegEx" ],
+  "Expression": {
+    "1": {
+      "Name": "1",
+      "XPath": "/html/body/div[1]/div/div/div[1]/div/div[2]/div/div/div[4]/div/div/div/div[3]/div[1]/div/span[1]",
+      "CssSelector": ".Fz\\(36px\\)",
+      "RegExPattern": "<span class=\"Trsdu\\(0.3s\\) Fw\\(b\\) Fz\\(36px\\) Mb\\(-4px\\) D\\(ib\\)\" data-reactid=\"\\d*\">(?<quote>\\d*.\\d*)</span>"
+    },
+    "2": {
+      "Name": "2",
+      "XPath": "//span[contains(@class,'Trsdu(0.3s) Fw(b)')]"
+    },
+    "3": {
+      "Name": "3",
+      "XPath": "(//span[@data-reactid='34'])[2]"
+    }
+  }
+}

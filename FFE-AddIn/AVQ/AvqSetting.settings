@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FFE" GeneratedClassName="AvqSetting">
+  <Profiles />
+  <Settings>
+    <Setting Name="EnableLogging" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="BatchQueryMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BatchQueryNamedRange" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BatchComment" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ApiKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">demo</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="Serilog.Events.LogEventLevel" Scope="User">
+      <Value Profile="(Default)">Information</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
