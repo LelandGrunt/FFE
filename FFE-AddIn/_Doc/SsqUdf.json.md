@@ -9,7 +9,7 @@ Each user-defined function definition has two parts:
 The first part describes the name and how the function should be displayed in Excel in the function dialog.
    <img src="Images/SsqUdf.json.md - QueryInformation.png" style="zoom:50%;" />
    How it looks like in the Excel function dialog:
-   <img src="Images/SsqUdt.json.md - Excel function dialog (QGF).png" style="zoom: 33%;" />
+   <img src="Images/SsqUdf.json.md - Excel function dialog (QGF).png" style="zoom: 33%;" />
    `Help on this function` is linked to the website which is defined under `Help Topic.`
    The `Help Link` object is currently not used.
    The `Comment` object value is an internal comment and used in the JSON file only.
