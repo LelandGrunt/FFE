@@ -4,7 +4,7 @@ This document records all notable changes to FFE.
 
 
 
-## [1.1.0](https://github.com/LelandGrunt/FFE/compare/1.0.0...1.1.0) - 2020-05-29
+## [1.1.0](https://github.com/LelandGrunt/FFE/compare/v1.0.0...v1.1.0) - 2020-05-29
 
 ### Added
 
