@@ -1,0 +1,26 @@
+name: FFE-CI
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Set up Git repository
+      uses: actions/checkout@master
+      
+    - name: Set up NuGet.exe
+      uses: warrenbuckley/Setup-Nuget@v1
+      
+    - name: Set up MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+      
+    - name: Setup VSTest.Console.exe
+      uses: malcolmnixon/Setup-VSTest@v1
+      
+    - name: Restore NuGet packages
+      run: nuget.exe restore .\FFE.sln
+      
+    - name: Build solution FFE.sln
+      run: msbuild.exe .\FFE.sln /p:configuration="Test" -m
+      
+    - name: Test FFE-AddIn.Test
+      run: vstest.console.exe **\FFE-AddIn_Test.dll

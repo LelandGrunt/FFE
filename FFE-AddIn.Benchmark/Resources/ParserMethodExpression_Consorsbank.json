@@ -1,0 +1,32 @@
+{
+  "Provider": {
+    "Name": "Consorbank",
+    "Url": "https://www.consorsbank.de/Wertpapierhandel/Fonds/Kurs-Snapshot/snapshotoverview/US5949181045"
+  },
+  "WebParsers": [ "Auto", "HAP", "AngleSharp", "HttpClient", "WebClient" ],
+  "WebParserMethods": [ "XPath", "CssSelector", "RegEx" ],
+  "Expression": {
+    "1": {
+      "Name": "1",
+      "XPath": "/html/body/div[3]/div[3]/div[1]/div[2]/div/div[1]/form/div/div[1]/strong",
+      "CssSelector": "body.hide-extras.ev-wrapper-webui-de.financeinfosHome.ccui-GRID-D.cc:nth-child(2) div.ccui-c div.ccui-row:nth-child(1) form:nth-child(1) div.snapshot-header.snapshot:nth-child(1) div.quote-data:nth-child(1) > strong.price.price-plus:nth-child(3)",
+      "RegExPattern": "<strong class=.price price-.*.>.*?(?<quote>\\d*,\\d*)</strong>",
+      "RegExGroupName": null,
+      "RegExMatchIndex": null
+    },
+    "2": {
+      "Name": "2",
+      "XPath": "//strong[starts-with(@class,'price price-')]",
+      "CssSelector": ".price",
+      "RegExPattern": "<strong class=.price price-minus|plus.>.*?(?<quote>\\d*,\\d*)</strong>"
+    },
+    "3": {
+      "Name": "3",
+      "XPath": "//strong[@class='price price-minus' or @class='price price-plus']"
+    },
+    "4": {
+      "Name": "4",
+      "XPath": "//strong[contains(@class,'price')]"
+    }
+  }
+}

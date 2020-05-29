@@ -1,0 +1,129 @@
+{
+  "Version": "1.0",
+  "Version Date": "2019-12-29T00:00Z",
+  "Meta Data": {
+    "QueryInformation": {
+      "Name": "Name of User Defined Function (UDF). Mandatory.",
+      "Description": "Description of UDF (max. 30 characters). Shown in Excel function dialog. Mandatory.",
+      "Author": "Author who wrotes this UDF query specification. Shown in Excel function dialog. Mandatory.",
+      "Author Email": "Authors email. Shown in Excel function dialog. Mandatory.",
+      "Version": "Version of UDF specification. Used to determine UDF specification updates. Shown in Excel function dialog. (Format: MAJOR.MINOR)",
+      "Version Date": "Date of UDF specification. Used to determine UDF specification updates. Shown in Excel function dialog. (Format: YYYY-MM-DD)",
+      "Help Topic": "Link to UDF help. Linked with/Used in Excel function dialog. (Format: http(s)://)",
+      "Help Link": "Link to authors UDF help site. (Format: http(s)://)",
+      "Provider": "Source of UDF query result. Shown in Excel function dialog.",
+      "Enabled": "Register query as UDF? (Format: true/false)",
+      "ExcelArgNameStockIdentifier": "Name of UDF argument for stock identifier. Shown in Excel function dialog.",
+      "ExcelArgDescStockIdentifier": "Description of UDF argument for stock identifier. Shown in Excel function dialog.",
+      "Comment": "Internal comment. Used in this JSON file only."
+    },
+    "QueryParameter": {
+      "Url": "Mandatory. Url must contain StockIdentifierPlaceholder parameter value.",
+      "StockIdentifierPlaceholder": "Optional. Default: {ISIN_TICKER_WKN}",
+      "XPath": "Optional (Either XPath, CssSelector or RegExPattern parameter is mandatory. If all exists, then XPath is prioritized and evaluated first.)",
+      "CssSelector": "Optional (Either XPath, CssSelector or RegExPattern parameter is mandatory. If all exists, then XPath is prioritized and evaluated first.)",
+      "RegExPattern": "Optional (Either XPath, CssSelector or RegExPattern parameter is mandatory. If XPath or CssSelector exists, then regular expression is evaluated on XPath/CssSelector selection result.)",
+      "RegExGroupName": "Optional. Only used if RegExPattern parameter exists. Default: quote",
+      "RegExMatchIndex": "Optional. Only used if RegExPattern parameter exists. Default: 0",
+      "Locale": "Optional. Used to parse query result. Default: Locale of local computer. Must be a predefined CultureInfo identifier (.NET). Example: en-US.",
+      "Parser": "Optional. Valid values: HAP, AngleSharp, HttpClient, WebClient or Auto. Default: Auto"
+    }
+  },
+  "UDF": {
+    "CBQ": {
+      "QueryInformation": {
+        "Name": "QCB",
+        "Description": "Function to get the stock price value from the Consorsbank website.",
+        "Author": "Leland Grunt",
+        "Author Email": "leland.grunt@gmail.com",
+        "Version": "1.0",
+        "Version Date": "2019-12-29",
+        "Help Topic": "https://github.com/LelandGrunt/FFE",
+        "Help Link": "https://github.com/LelandGrunt/FFE",
+        "Provider": "consorsbank.de",
+        "Enabled": false,
+        "ExcelArgNameStockIdentifier": "WKN or ISIN",
+        "ExcelArgDescStockIdentifier": "Wertpapierkennnummer or International Securities Identification Number",
+        "Comment": "SSQ Version of the QCB function. Replaced by Cbq class."
+      },
+      "QueryParameter": {
+        "Url": "https://www.consorsbank.de/Wertpapierhandel/Fonds/Kurs-Snapshot/snapshotoverview/{WKN_ISIN}",
+        "StockIdentifierPlaceholder": "{WKN_ISIN}",
+        "XPath": "//strong[starts-with(@class,'price price-')]",
+        "Locale": "de-DE"
+      }
+    },
+    "JEQ": {
+      "QueryInformation": {
+        "Name": "QJE",
+        "Description": "Function to get the stock price value from the justETF website.",
+        "Author": "Leland Grunt",
+        "Author Email": "leland.grunt@gmail.com",
+        "Version": "1.0",
+        "Version Date": "2019-12-29",
+        "Help Topic": "https://github.com/LelandGrunt/FFE",
+        "Help Link": "https://github.com/LelandGrunt/FFE",
+        "Provider": "justetf.com",
+        "Enabled": true,
+        "ExcelArgNameStockIdentifier": "ISIN",
+        "ExcelArgDescStockIdentifier": "International Securities Identification Number",
+        "Comment": ""
+      },
+      "QueryParameter": {
+        "Url": "https://www.justetf.com/de/etf-profile.html?isin={ISIN}",
+        "StockIdentifierPlaceholder": "{ISIN}",
+        "XPath": "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+        "Locale": "de-DE",
+        "Parser": "HttpClient"
+      }
+    },
+    "BBQ": {
+      "QueryInformation": {
+        "Name": "QBB",
+        "Description": "Function to get the stock price value from the Bloomberg API.",
+        "Author": "Leland Grunt",
+        "Author Email": "leland.grunt@gmail.com",
+        "Version": "1.0",
+        "Version Date": "2019-12-29",
+        "Help Topic": "https://github.com/LelandGrunt/FFE",
+        "Help Link": "https://github.com/LelandGrunt/FFE",
+        "Provider": "bloomberg.com",
+        "Enabled": false,
+        "ExcelArgNameStockIdentifier": "Ticker",
+        "ExcelArgDescStockIdentifier": "Bloomberg-Ticker",
+        "Comment": "Disabled, because Bloombergs robot detection prevent extraction of data."
+      },
+      "QueryParameter": {
+        "Url": "https://www.bloomberg.com/markets/api/bulk-time-series/price/{TICKER}?timeFrame=1_DAY",
+        "StockIdentifierPlaceholder": "{TICKER}",
+        "XPath": "/html/body/div[5]/div/div/section[2]/div[1]/div[2]/section[1]/section/section[2]/section/div[1]/span[1]",
+        "Locale": "en-US",
+        "Parser": "WebClient"
+      }
+    },
+    "YFQ": {
+      "QueryInformation": {
+        "Name": "QYF",
+        "Description": "Function to get the stock price value from the Yahoo finance website.",
+        "Author": "Leland Grunt",
+        "Author Email": "leland.grunt@gmail.com",
+        "Version": "1.0",
+        "Version Date": "2019-12-29",
+        "Help Topic": "https://github.com/LelandGrunt/FFE",
+        "Help Link": "https://github.com/LelandGrunt/FFE",
+        "Provider": "finance.yahoo.com",
+        "Enabled": true,
+        "ExcelArgNameStockIdentifier": "Ticker",
+        "ExcelArgDescStockIdentifier": "Yahoo-Ticker",
+        "Comment": ""
+      },
+      "QueryParameter": {
+        "Url": "https://finance.yahoo.com/quote/{TICKER}",
+        "StockIdentifierPlaceholder": "{TICKER}",
+        "CssSelector": ".Fz\\(36px\\)",
+        "Locale": "en-US",
+        "Parser": "AngleSharp"
+      }
+    }
+  }
+}

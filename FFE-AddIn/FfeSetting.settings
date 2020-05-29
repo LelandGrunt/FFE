@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FFE" GeneratedClassName="FfeSetting">
+  <Profiles />
+  <Settings>
+    <Setting Name="EnableLogging" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LogTemplate" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} &lt;{ThreadId}&gt; [{Level:u3}] {UDF} {Message:lj}{NewLine}{Exception}</Value>
+    </Setting>
+    <Setting Name="LogFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Logs</Value>
+    </Setting>
+    <Setting Name="ReleaseFileName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">FFE{0}.xll</Value>
+    </Setting>
+    <Setting Name="RegisterFunctionsOnStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="UpdateUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://api.github.com/repos/LelandGrunt/FFE/releases</Value>
+    </Setting>
+    <Setting Name="ReleasesUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/LelandGrunt/FFE/releases</Value>
+    </Setting>
+    <Setting Name="ChangelogUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/LelandGrunt/FFE/blob/master/CHANGELOG.md</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="Serilog.Events.LogEventLevel" Scope="User">
+      <Value Profile="(Default)">Information</Value>
+    </Setting>
+    <Setting Name="LogWriteToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RibbonExtendedView" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CheckUpdateOnStartup" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

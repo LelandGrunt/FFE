@@ -1,0 +1,25 @@
+{
+  "Provider": {
+    "Name": "justETF",
+    "Url": "https://www.justetf.com/de/etf-profile.html?isin=IE00B4L5Y983"
+  },
+  "WebParsers": [ "HAP", "AngleSharp", "HttpClient" ],
+  "WebParserMethods": [ "XPath", "CssSelector", "RegEx" ],
+  "Expression": {
+    "1": {
+      "Name": "1",
+      "XPath": "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+      "CssSelector": ".tab-container > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)",
+      "RegExPattern": "<div class=\"col-xs-6\">.*?<div class=\"val\">.*?<span>(?<Currency>.*)</span>.*?<span>(?<quote>\\d*,\\d*)</span>.*?</div>"
+    },
+    "2": {
+      "Name": "2",
+      "XPath": "(//div[@class='val']//span)[3]",
+      "CssSelector": "body.header-fixed.header-fixed-space.no-touch:nth-child(2) div.wrapper:nth-child(2) div.tab-container div.container:nth-child(1) div.row:nth-child(3) div.col-sm-6:nth-child(2) div.infobox:nth-child(2) div.row:nth-child(1) div.col-xs-6:nth-child(1) div.val > span:nth-child(2)"
+    },
+    "3": {
+      "Name": "3",
+      "XPath": "//span[text()='EUR']/following-sibling::span"
+    }
+  }
+}

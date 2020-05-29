@@ -1,0 +1,27 @@
+{
+  "Provider": {
+    "justETF": {
+      "Name": "justETF",
+      "Url": "https://www.justetf.com/de/etf-profile.html?isin=IE00B4L5Y983",
+      "XPath": "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+      "CssSelector": ".tab-container > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)",
+      "RegExPattern": "<div class=\"col-xs-6\">.*?<span>(?<quote>\\d*,\\d*)</span>.*?</div>"
+    },
+    "Consorsbank": {
+      "Name": "Consorsbank",
+      "Url": "https://www.consorsbank.de/Wertpapierhandel/Fonds/Kurs-Snapshot/snapshotoverview/US5949181045",
+      "XPath": "//strong[starts-with(@class,'price price-')]",
+      "CssSelector": ".price",
+      "RegExPattern": "<strong class=.price price-.*.>.*?(?<quote>\\d*,\\d*)</strong>"
+    },
+    "Yahoo_Finance": {
+      "Name": "Yahoo_Finance",
+      "Url": "https://finance.yahoo.com/quote/MSFT",
+      "XPath": "/html/body/div[1]/div/div/div[1]/div/div[2]/div/div/div[4]/div/div/div/div[3]/div[1]/div/span[1]",
+      "CssSelector": ".Fz\\(36px\\)",
+      "RegExPattern": "<span class=\"Trsdu\\(0.3s\\) Fw\\(b\\) Fz\\(36px\\) Mb\\(-4px\\) D\\(ib\\)\" data-reactid=\"\\d+\">(?<quote>\\d*.\\d*)</span>",
+      "RegExGroupName": "quote",
+      "RegExMatchIndex": 0
+    }
+  }
+}

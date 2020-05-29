@@ -1,0 +1,1 @@
+WebParserPerformanceWebTests: 90 benchmarks = 3 Methods x 5 Parsers x 3 Providers x 2 Platforms
