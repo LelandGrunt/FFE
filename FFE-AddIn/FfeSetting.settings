@@ -23,6 +23,9 @@
     <Setting Name="ReleasesUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://github.com/LelandGrunt/FFE/releases</Value>
     </Setting>
+    <Setting Name="ChangelogUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/LelandGrunt/FFE/blob/master/CHANGELOG.md</Value>
+    </Setting>
     <Setting Name="LogLevel" Type="Serilog.Events.LogEventLevel" Scope="User">
       <Value Profile="(Default)">Information</Value>
     </Setting>

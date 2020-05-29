@@ -8,7 +8,8 @@ namespace FFE
 {
     public class SsqTests : IDisposable
     {
-        private static readonly IEnumerable<Parser> Parsers = Enum.GetValues(typeof(Parser)).Cast<Parser>();
+        // INFO: Newtonsoft parser excluded because of incomplete implementation!
+        private static readonly IEnumerable<Parser> Parsers = Enum.GetValues(typeof(Parser)).Cast<Parser>().Where(p => !p.Equals(Parser.Newtonsoft));
 
         #region Test Data
         public static IEnumerable<object[]> ParserTestData()

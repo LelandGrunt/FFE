@@ -71,6 +71,7 @@ namespace FFE
                     if (dialogResult == Forms.DialogResult.Yes)
                     {
                         string downloadUrl = GetNewVersionDownloadUrl(name);
+                        OpenLink(FfeSetting.Default.ChangelogUrl);
                         OpenLink(downloadUrl);
                     }
                 }

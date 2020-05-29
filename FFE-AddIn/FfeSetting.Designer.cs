@@ -93,6 +93,15 @@ namespace FFE {
             }
         }
         
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/LelandGrunt/FFE/blob/master/CHANGELOG.md")]
+        public string ChangelogUrl {
+            get {
+                return ((string)(this["ChangelogUrl"]));
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Information")]

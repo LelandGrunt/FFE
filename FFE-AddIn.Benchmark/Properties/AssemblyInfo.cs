@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FFE Add-in")]
-[assembly: AssemblyCopyright("Copyright © 2019 Leland Grunt")]
+[assembly: AssemblyCopyright("Copyright © 2019-2020 Leland Grunt")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

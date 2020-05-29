@@ -8,8 +8,6 @@ The FFE wiki contains a full documentation of the FFE functionality.
 
 * [AVQ](AVQ)
 
-* [AVQ Batch Query](AVQ-Batch-Query)
-
 * [CBQ](CBQ)
 
 * [SSQ](SSQ)
@@ -17,3 +15,4 @@ The FFE wiki contains a full documentation of the FFE functionality.
 * [SsqUdf.json](SsqUdf.json)
 
 * [Ribbon / Options](Ribbon_Options)
+

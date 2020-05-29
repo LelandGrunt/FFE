@@ -125,7 +125,7 @@ namespace FFE
         {
             foreach (Range range in ranges)
             {
-                string rangeAdress = range.Address[true, true, XlReferenceStyle.xlR1C1, true].Split(new[] { "]" }, StringSplitOptions.None)[1];
+                string rangeAdress = range.Address[false, false, XlReferenceStyle.xlA1, true].Split(new[] { "]" }, StringSplitOptions.None)[1];
 
                 Log.Debug("Recalculate range {@Range} with functionName {@FunctionName}", rangeAdress, functionName);
 
@@ -143,7 +143,7 @@ namespace FFE
         {
             foreach (Range range in ranges)
             {
-                string rangeAdress = range.Address[true, true, XlReferenceStyle.xlR1C1, true].Split(new[] { "]" }, StringSplitOptions.None)[1];
+                string rangeAdress = range.Address[false, false, XlReferenceStyle.xlA1, true].Split(new[] { "]" }, StringSplitOptions.None)[1];
 
                 Log.Debug("Recalculate range {@Range} with functionName {@FunctionName}", rangeAdress, functionName);
 

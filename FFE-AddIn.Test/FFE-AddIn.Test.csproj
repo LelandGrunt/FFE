@@ -59,8 +59,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ExcelDna.Integration.1.0.0\lib\ExcelDna.Integration.dll</HintPath>
     </Reference>
-    <Reference Include="Nager.Date, Version=1.25.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nager.Date.1.25.8\lib\net461\Nager.Date.dll</HintPath>
+    <Reference Include="Nager.Date, Version=1.25.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nager.Date.1.25.10\lib\net461\Nager.Date.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
@@ -90,7 +90,28 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="AVQ\AlphaVantageTest.json">
+    <None Include="AVQ\TIME_SERIES_INTRADAY.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\GLOBAL_QUOTE.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\TIME_SERIES_MONTHLY_ADJUSTED.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\TIME_SERIES_MONTHLY.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\TIME_SERIES_WEEKLY_ADJUSTED.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\TIME_SERIES_WEEKLY.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\TIME_SERIES_DAILY_ADJUSTED.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AVQ\TIME_SERIES_DAILY.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

@@ -37,42 +37,6 @@ namespace FFE {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BatchQueryMode {
-            get {
-                return ((string)(this["BatchQueryMode"]));
-            }
-            set {
-                this["BatchQueryMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BatchQueryNamedRange {
-            get {
-                return ((string)(this["BatchQueryNamedRange"]));
-            }
-            set {
-                this["BatchQueryNamedRange"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool BatchComment {
-            get {
-                return ((bool)(this["BatchComment"]));
-            }
-            set {
-                this["BatchComment"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("demo")]
         public string ApiKey {
             get {

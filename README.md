@@ -51,7 +51,15 @@ The FFE Add-in currently adds the following user-defined functions:
 
 | Group | Function | Description                                                  |
 | ----- | -------- | ------------------------------------------------------------ |
-| AVQ   | QAVD     | Query of stock values via the [Alpha Vantage API](https://www.alphavantage.co/documentation/) (TIME_SERIES_DAILY). |
+| AVQ   | QAVQ     | Query of stock values via the [Alpha Vantage GLOBAL_QUOTE API](https://www.alphavantage.co/documentation/#latestprice). |
+| AVQ   | QAVID    | Query of stock values via the [Alpha Vantage TIME_SERIES_INTRADAY API](https://www.alphavantage.co/documentation/#intraday). |
+| AVQ   | QAVD     | Query of stock values via the [Alpha Vantage TIME_SERIES_DAILY API](https://www.alphavantage.co/documentation/#daily). |
+| AVQ   | QAVDA    | Query of stock values via the [Alpha Vantage TIME_SERIES_DAILY_ADJUSTED API](https://www.alphavantage.co/documentation/#dailyadj). |
+| AVQ   | QAVW     | Query of stock values via the [Alpha Vantage TIME_SERIES_WEEKLY API](https://www.alphavantage.co/documentation/#weekly). |
+| AVQ   | QAVWA    | Query of stock values via the [Alpha Vantage TIME_SERIES_WEEKLY_ADJUSTED API](https://www.alphavantage.co/documentation/#weeklyadj). |
+| AVQ   | QAVM     | Query of stock values via the [Alpha Vantage TIME_SERIES_MONTHLY API](https://www.alphavantage.co/documentation/#monthly). |
+| AVQ   | QAVMA    | Query of stock values via the [Alpha Vantage TIME_SERIES_MONTHLY_ADJUSTED API](https://www.alphavantage.co/documentation/#monthlyadj). |
+| AVQ   | QAVTS    | Wrapper for all Alpha Vantage time series APIs (except GLOBAL_QUOTE). |
 | CBQ   | QCB      | Query of stock price from the [Consorsbank](https://www.consorsbank.de) website. |
 | CBQ   | QCBF     | Query of stock price from the [Consorsbank](https://www.consorsbank.de) website with currency format. |
 | SSQ   | QJE      | Query of stock price from the [justETF](https://www.justetf.com) website. |
@@ -118,7 +126,7 @@ For the Alpha Vantage provider, a API key is mandatory.
 * Excel 2016 (32-/64-bit)
 * Excel 2019 (64-bit)
 
-For Excel 2003 no ribbon interface is available. Use and edit the [FFEx32.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx32.xll.config) respectively the [FFEx64.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx64.xll.config) file to set the [FFE options](https://github.com/LelandGrunt/FFE/wiki/Ribbon_Options) (incl. Alpha Vantage API Key). Save the file in the FFE root folder where the FFE Add-in (FFEx32|FFEx64.xll) is located. Because of missing ribbon interface, the [AVQ Batch Query](https://github.com/LelandGrunt/FFE/wiki/AVQ-Batch-Query) is also not available.
+For Excel 2003 no ribbon interface is available. Use and edit the [FFEx32.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx32.xll.config) respectively the [FFEx64.xll.config](https://github.com/LelandGrunt/FFE/releases/latest/download/FFEx64.xll.config) file to set the [FFE options](https://github.com/LelandGrunt/FFE/wiki/Ribbon_Options) (incl. Alpha Vantage API Key). Save the file in the FFE root folder where the FFE Add-in (FFEx32|FFEx64.xll) is located.
 
 
 
@@ -180,10 +188,6 @@ Go to [Wiki](https://github.com/LelandGrunt/FFE/wiki)
 * AVQ: Replacement Alpha Vantage interface by an open and popular third-party client library for the Alpha Vantage API.
 
 * AVQ: Addition of other available Alpha Vantage APIs (e.g. [CURRENCY_EXCHANGE_RATE](https://www.alphavantage.co/documentation/#currency-exchange)).
-
-* AVQ: Batch Query - Adding selection (option) to choose between price or volume query.
-
-* AVQ: Batch Query - Adding support for named ranges which contains contiguous and non-contiguous ranges.
 
 * FFE Framework: Plugin interface for custom user-defined functions/methods.
 

@@ -6,6 +6,7 @@
         HAP,
         AngleSharp,
         HttpClient,
-        WebClient
+        WebClient,
+        Newtonsoft
     }
 }

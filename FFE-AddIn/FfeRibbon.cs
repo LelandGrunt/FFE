@@ -50,24 +50,6 @@ namespace FFE
         {
             switch (control.Id)
             {
-                case "ddcAvqBatchQueryMode":
-                    if (!string.IsNullOrEmpty(AvqSetting.Default.BatchQueryMode))
-                    {
-                        return AvqSetting.Default.BatchQueryMode;
-                    }
-                    else
-                    {
-                        return GetTagValue(control.Tag, DefaultValueTagKey);
-                    }
-                case "ebxAvqRangeName":
-                    if (!string.IsNullOrEmpty(AvqSetting.Default.BatchQueryNamedRange))
-                    {
-                        return AvqSetting.Default.BatchQueryNamedRange;
-                    }
-                    else
-                    {
-                        return GetTagValue(control.Tag, DefaultValueTagKey);
-                    }
                 case "ddcFfeLogLevel":
                     return DropDownItemIdToLogEventLevel.FirstOrDefault(x => x.Value == FfeSetting.Default.LogLevel).Key;
                 default:
@@ -79,8 +61,6 @@ namespace FFE
         {
             switch (control.Id)
             {
-                case "cbxAvqBatchComment":
-                    return AvqSetting.Default.BatchComment;
                 case "cbxFfeLogging":
                     return FfeSetting.Default.EnableLogging;
                 case "cbxFfeFileLogging":
@@ -113,12 +93,6 @@ namespace FFE
             {
                 return true;
             }
-        }
-
-        public void SetBatchComment(IRibbonControl control, bool pressed)
-        {
-            AvqSetting.Default.BatchComment = pressed;
-            AvqSetting.Default.Save();
         }
 
         public void SetFfeLogging(IRibbonControl control, bool pressed)

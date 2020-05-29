@@ -20,29 +20,6 @@ namespace FFE
             }
         }
 
-        public void SetBatchQueryMode(IRibbonControl control, string id, int index)
-        {
-            AvqSetting.Default.BatchQueryMode = id;
-            AvqSetting.Default.Save();
-
-            /*if (id.Equals("ddcAvqBatchQueryModeItemNamedRange"))
-            {
-                // Enable ebxAvqRangeName Editbox.
-            }
-            else
-            {
-                // Disable ebxAvqRangeName Editbox.
-            }*/
-        }
-
-        public void SetBatchQueryNamedRange(IRibbonControl control, string value)
-        {
-            AvqSetting.Default.BatchQueryNamedRange = value;
-            AvqSetting.Default.Save();
-        }
-
-        public void QueryAlphaVantageAsBatch(IRibbonControl control) { Avq.QueryAlphaVantageAsBatch(); }
-
         public void RecalculateAvqCallLimitReachedError(IRibbonControl control)
         {
             FfeExcel.FindCells((string)Avq.AvqExcelErrorCallLimitReached(), new ExcelFindOptions()

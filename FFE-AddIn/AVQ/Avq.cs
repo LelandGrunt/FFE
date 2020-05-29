@@ -1,17 +1,15 @@
 ﻿using ExcelDna.Integration;
-using Microsoft.Office.Interop.Excel;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 
 namespace FFE
 {
-    public static class Avq
+    public static partial class Avq
     {
         private const string ADD_IN_NAME = "AVQ";
         private const string URL_ALPHA_VANTAGE_QUERY = "https://www.alphavantage.co/query";
@@ -29,38 +27,190 @@ namespace FFE
             }
         }
 
-        /// <summary>
-        /// Alpha Vantage Query for daily equity data.
-        /// </summary>
-        /// <param name="symbol">The symbol of the stock.</param>
-        /// <param name="info">The stock data info to return. 
-        ///                    Valid values: Open, High, Low, Close, Volume. Values are case-insensitive. 
-        ///                    Default: Close = Closing Price</param>
-        /// <param name="tradingDay">The trading day interpreted as an index based value (if positive) or as a trading date subtraction (if negative).
-        ///                          Default: 0 = Recent Trading Day</param>
-        /// <param name="tradingDate">The trading date. 
-        ///                           Default: None</param>
+        #region Excel Functions
         /// <remarks>Default parameter values are ignored from Excel.</remarks>
-        /// <returns>Returns stock data from the Alpha Vantage API (www.alphavantage.co).</returns>
         [FfeFunction(Provider = "alphavantage.co")]
         [ExcelFunction(Name = "QAVD",
-                       Description = "Returns stock data from the Alpha Vantage API (www.alphavantage.co).\nOnly the latest 100 trading dates are supported.",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_DAILY API (www.alphavantage.co).",
                        Category = "FFE",
                        IsThreadSafe = true)]
         public static object QAVD([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
                                   string symbol,
-                                  [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Volume\nDefault: Close = Closing Price")]
+                                  [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Volume (case insensitive)\nDefault: Close = Closing Price")]
                                   string info,
                                   [ExcelArgument(Name = "Trading Day", Description = "positive value => index based trading day\nnegative value => trading date substraction\nDefault: 0 = Recent Trading Day")]
                                   int tradingDay,
                                   [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
-                                  DateTime tradingDate)
+                                  DateTime tradingDate,
+                                  [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (day/date) argument matches. Valid values: FALSE (= 0), TRUE (<> 0)\nDefault: FALSE")]
+                                  bool bestMatch = false,
+                                  [ExcelArgument(Name = "Output Size", Description = "The size of returned data points.\nValid values: compact, full (case insensitive)\nDefault: compact")]
+                                  string outputSize = "compact")
         {
-            object quote = ExcelError.ExcelErrorNA;
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "4. close" : info;
 
-            /* "This API returns daily time series (date, daily open, daily high, daily low, daily close, daily volume)
-             *  of the equity specified, covering up to 20 years of historical data." */
-            const string API_FUNCTION = "TIME_SERIES_DAILY";
+            // Set default output size, if nothing was given.
+            AvStockTimeSeriesOutputSize? avStockTimeSeriesOutputSize = AvStockTimeSeriesOutputSize.compact;
+            if (!string.IsNullOrEmpty(outputSize))
+            {
+                avStockTimeSeriesOutputSize = (AvStockTimeSeriesOutputSize)Enum.Parse(typeof(AvStockTimeSeriesOutputSize), outputSize.ToLower());
+            }
+
+            return QAV("TIME_SERIES_DAILY", symbol: symbol, info: info, dataPointIndex: tradingDay, dataPointDate: tradingDate, outputSize: avStockTimeSeriesOutputSize, bestMatch: bestMatch);
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVDA",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_DAILY_ADJUSTED API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVDA([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                   string symbol,
+                                   [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Adjusted Close, Volume, Dividend Amount, Split Coefficient\nDefault: Close = Adjusted Closing Price")]
+                                   string info,
+                                   [ExcelArgument(Name = "Trading Day", Description = "positive value => index based trading day\nnegative value => trading date substraction\nDefault: 0 = Recent Trading Day")]
+                                   int tradingDay,
+                                   [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
+                                   DateTime tradingDate,
+                                   [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (day/date) argument matches.\nDefault: FALSE")]
+                                   bool bestMatch = false,
+                                   [ExcelArgument(Name = "Output Size", Description = "The size of returned data points.\nValid values: compact, full\nDefault: compact")]
+                                   string outputSize = "compact")
+        {
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "5. adjusted close" : info;
+
+            // Set default output size, if nothing was given.
+            AvStockTimeSeriesOutputSize? avStockTimeSeriesOutputSize = AvStockTimeSeriesOutputSize.compact;
+            if (!string.IsNullOrEmpty(outputSize))
+            {
+                avStockTimeSeriesOutputSize = (AvStockTimeSeriesOutputSize)Enum.Parse(typeof(AvStockTimeSeriesOutputSize), outputSize.ToLower());
+            }
+
+            return QAV("TIME_SERIES_DAILY_ADJUSTED", symbol: symbol, info: info, dataPointIndex: tradingDay, dataPointDate: tradingDate, outputSize: avStockTimeSeriesOutputSize, bestMatch: bestMatch);
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVW",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_WEEKLY API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVW([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                  string symbol,
+                                  [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Volume\nDefault: Close = Closing Price")]
+                                  string info,
+                                  [ExcelArgument(Name = "Trading Week", Description = "positive value => index based trading week\nnegative value => trading week substraction\nDefault: 0 = Recent Trading Week")]
+                                  int tradingWeek,
+                                  [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
+                                  DateTime tradingDate,
+                                  [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (week/date) argument matches.\nDefault: FALSE")]
+                                  bool bestMatch = false)
+        {
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "4. close" : info;
+
+            // Subtraction of trading week.
+            tradingDate = SubstractTradingWeek(tradingDate, tradingWeek);
+
+            return QAV("TIME_SERIES_WEEKLY", symbol: symbol, info: info, dataPointIndex: tradingWeek, dataPointDate: tradingDate, bestMatch: bestMatch);
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVWA",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_WEEKLY_ADJUSTED API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVWA([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                   string symbol,
+                                   [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Adjusted Close, Volume, Dividend Amount\nDefault: Adjusted Close = Adjusted Closing Price")]
+                                   string info,
+                                   [ExcelArgument(Name = "Trading Week", Description = "positive value => index based trading week\nnegative value => trading week substraction\nDefault: 0 = Recent Trading Week")]
+                                   int tradingWeek,
+                                   [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
+                                   DateTime tradingDate,
+                                   [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (week/date) argument matches.\nDefault: FALSE")]
+                                   bool bestMatch = false)
+        {
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "5. adjusted close" : info;
+
+            // Subtraction of trading week.
+            tradingDate = SubstractTradingWeek(tradingDate, tradingWeek);
+
+            return QAV("TIME_SERIES_WEEKLY_ADJUSTED", symbol: symbol, info: info, dataPointIndex: tradingWeek, dataPointDate: tradingDate, bestMatch: bestMatch);
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVM",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_MONTHLY API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVM([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                  string symbol,
+                                  [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Volume\nDefault: Close = Closing Price")]
+                                  string info,
+                                  [ExcelArgument(Name = "Trading Month", Description = "positive value => index based trading month\nnegative value => trading month substraction\nDefault: 0 = Recent Trading Month")]
+                                  int tradingMonth,
+                                  [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
+                                  DateTime tradingDate,
+                                  [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (month/date) argument matches.\nDefault: FALSE")]
+                                  bool bestMatch = false)
+        {
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "4. close" : info;
+
+            // Subtraction of trading month.
+            tradingDate = SubstractTradingMonth(tradingDate, tradingMonth);
+
+            return QAV("TIME_SERIES_MONTHLY", symbol: symbol, info: info, dataPointIndex: tradingMonth, dataPointDate: tradingDate, bestMatch: bestMatch);
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVMA",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_MONTHLY_ADJUSTED API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVMA([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                   string symbol,
+                                   [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Adjusted Close, Volume, Dividend Amount\nDefault: Adjusted Close = Adjusted Closing Price")]
+                                   string info,
+                                   [ExcelArgument(Name = "Trading Month", Description = "positive value => index based trading month\nnegative value => trading month substraction\nDefault: 0 = Recent Trading Month")]
+                                   int tradingMonth,
+                                   [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
+                                   DateTime tradingDate,
+                                   [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (month/date) argument matches.\nDefault: FALSE")]
+                                   bool bestMatch = false)
+        {
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "5. adjusted close" : info;
+
+            // Subtraction of trading month.
+            tradingDate = SubstractTradingMonth(tradingDate, tradingMonth);
+
+            return QAV("TIME_SERIES_MONTHLY_ADJUSTED", symbol: symbol, info: info, dataPointIndex: tradingMonth, dataPointDate: tradingDate, bestMatch: bestMatch);
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVQ",
+                       Description = "Returns stock data from the Alpha Vantage GLOBAL_QUOTE API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVQ([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                  string symbol,
+                                  [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Price, Volume, Latest Trading Day, Previous Close, Change, Change Percent\nDefault: Price")]
+                                  string info)
+        {
+            // Symbol is mandatory.
+            if (string.IsNullOrEmpty(symbol))
+            {
+                return ExcelError.ExcelErrorNA;
+            }
+
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "05. price" : info;
+
+            object stockInfo = ExcelError.ExcelErrorNA;
 
             JObject json = null;
 
@@ -72,322 +222,291 @@ namespace FFE
                     return ExcelError.ExcelErrorNA;
                 }
 
-                // Provided Alpha Vantage Time Series Data(Default is "4. close").
-                // For ease of use, the preceding numbering is not necessary.
-                switch (info.ToLower())
+                // API documentation: https://www.alphavantage.co/documentation/#latestprice
+                string url = AvUrlBuilder("GLOBAL_QUOTE", symbol: symbol);
+                Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
+
+                json = GetAvJson(url);
+
+                // The "Global Quote" element/token is expected, otherwise something went wrong.
+                if (((JProperty)json.Children().ElementAt(0)).Name.Equals("Global Quote"))
                 {
-                    case "open":
-                        info = "1. open";
-                        break;
-                    case "high":
-                        info = "2. high";
-                        break;
-                    case "low":
-                        info = "3. low";
-                        break;
-                    case "close":
-                        info = "4. close";
-                        break;
-                    case "volume":
-                        info = "5. volume";
-                        break;
-                    default:
-                        info = "4. close";
-                        break;
+                    JToken globalQuote = ((JProperty)json.Children().ElementAt(0)).Value;
+
+                    stockInfo = GetStockInfo(globalQuote, info);
+                }
+                else
+                {
+                    return ReturnAvError(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                return CatchAvException("QAVQ", ex, json);
+            }
+
+            return stockInfo;
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVID",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_INTRADAY API (www.alphavantage.co).\nThe function always returns the recent data point.",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVID([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                   string symbol,
+                                   [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Volume\nDefault: Open")]
+                                   string info,
+                                   [ExcelArgument(Name = "Data Point Index", Description = "is the index (zero-based) of the time series data point.\nDefault: 0 = First data point")]
+                                   int dataPointIndex = 0,
+                                   [ExcelArgument(Name = "Interval", Description = "is the time interval between two data points.\nValid values: [1|5|15|30|60]min\nDefault: 5min")]
+                                   string interval = "5min",
+                                   [ExcelArgument(Name = "Output Size", Description = "The size of returned data points.\nValid values: compact, full\nDefault: compact")]
+                                   string outputSize = "compact")
+        {
+            // Symbol is mandatory.
+            if (string.IsNullOrEmpty(symbol))
+            {
+                return ExcelError.ExcelErrorNA;
+            }
+
+            if (!string.IsNullOrEmpty(interval)
+                && !interval.Equals("1min")
+                && !interval.Equals("5min")
+                && !interval.Equals("15min")
+                && !interval.Equals("30min")
+                && !interval.Equals("60min"))
+            {
+                Log.Error("Interval {@Interval} is not supported", interval);
+                return ExcelError.ExcelErrorNA;
+            }
+            else
+            {
+                // Set default interval, if nothing was given.
+                interval = "5min";
+            }
+
+            // Set default stock data info, if nothing was given.
+            info = string.IsNullOrEmpty(info) ? "1. open" : info;
+
+            // Set default output size, if nothing was given.
+            AvStockTimeSeriesOutputSize? avStockTimeSeriesOutputSize = AvStockTimeSeriesOutputSize.compact;
+            if (!string.IsNullOrEmpty(outputSize))
+            {
+                avStockTimeSeriesOutputSize = (AvStockTimeSeriesOutputSize)Enum.Parse(typeof(AvStockTimeSeriesOutputSize), outputSize.ToLower());
+            }
+
+            object stockInfo;
+
+            JObject json = null;
+
+            try
+            {
+                // Check if Alpha Vantage API Key is set, if not exit function.
+                if (!CheckApiKey())
+                {
+                    return ExcelError.ExcelErrorNA;
+                }
+
+                // API documentation: https://www.alphavantage.co/documentation/#intraday
+                string url = AvUrlBuilder("TIME_SERIES_INTRADAY", symbol: symbol, outputSize: avStockTimeSeriesOutputSize, interval: interval);
+                Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
+
+                json = GetAvJson(url);
+
+                // The second element/token is always a time series object with the data points, if not, something went wrong.
+                if (((JProperty)json.Children().ElementAt(1)).Name.Contains("Time Series"))
+                {
+                    JToken firstTimeSerie = ((JProperty)((JProperty)json.Children().ElementAt(1)).Value.ElementAt(dataPointIndex)).Value;
+
+                    stockInfo = GetStockInfo(firstTimeSerie, info);
+                }
+                else
+                {
+                    return ReturnAvError(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                return CatchAvException("QAVID", ex, json);
+            }
+
+            return stockInfo;
+        }
+
+        [FfeFunction(Provider = "alphavantage.co")]
+        [ExcelFunction(Name = "QAVTS",
+                       Description = "Returns stock data from the Alpha Vantage TIME_SERIES_DAILY API (www.alphavantage.co).",
+                       Category = "FFE",
+                       IsThreadSafe = true)]
+        public static object QAVTS([ExcelArgument(Name = "Symbol", Description = "is the symbol of the stock.")]
+                                   string symbol,
+                                   [ExcelArgument(Name = "Info", Description = "is the stock data info to return.\nValid values: Open, High, Low, Close, Adjusted Close, Volume, Dividend Amount (case insensitive)\nDefault: Close = Closing Price")]
+                                   string info,
+                                   [ExcelArgument(Name = "Interval", Description = "Defines the AlphaVantage API to use.\nValid values: Daily, Weekly, Monthly, 1min, 5min, 15min, 30min, 60min\nDefault: Daily")]
+                                   string interval,
+                                   [ExcelArgument(Name = "Trading Day", Description = "positive value => index based trading day\nnegative value => trading date substraction\nDefault: 0 = Recent Trading Day")]
+                                   int tradingDay,
+                                   [ExcelArgument(Name = "Trading Date", Description = "is the trading date.\nDefault: None")]
+                                   DateTime tradingDate,
+                                   [ExcelArgument(Name = "Adjusted", Description = "is a flag for querying adjusted values or not.\nValid values: FALSE (= 0), TRUE (<> 0)\nDefault: FALSE")]
+                                   bool adjusted = false,
+                                   [ExcelArgument(Name = "Output Size", Description = "The size of returned data points.\nValid values: compact, full (case insensitive)\nDefault: compact")]
+                                   string outputSize = "compact",
+                                   [ExcelArgument(Name = "Best Match", Description = "Finds best trading data point, if no trading (day/date) argument matches. Valid values: FALSE (= 0), TRUE (<> 0)\nDefault: FALSE")]
+                                   bool bestMatch = false)
+        {
+            string api = null;
+
+            // Set default interval, if nothing was given.
+            interval = string.IsNullOrEmpty(interval) ? "daily" : interval.ToLower();
+            if (interval.Equals("1min")
+                || interval.Equals("5min")
+                || interval.Equals("15min")
+                || interval.Equals("30min")
+                || interval.Equals("60min"))
+            {
+                return QAVID(symbol: symbol, info: info, interval: interval, outputSize: outputSize);
+            }
+            else if (interval.Equals("daily")
+                     || interval.Equals("weekly")
+                     || interval.Equals("monthly"))
+            {
+                // Set default output size, if nothing was given.
+                AvStockTimeSeriesOutputSize? avStockTimeSeriesOutputSize = AvStockTimeSeriesOutputSize.compact;
+                if (!string.IsNullOrEmpty(outputSize))
+                {
+                    avStockTimeSeriesOutputSize = (AvStockTimeSeriesOutputSize)Enum.Parse(typeof(AvStockTimeSeriesOutputSize), outputSize.ToLower());
+                }
+
+                api = $"TIME_SERIES_{interval.ToUpper()}" + (adjusted ? "_ADJUSTED" : "");
+                return QAV(api, symbol: symbol, info: info, dataPointIndex: tradingDay, dataPointDate: tradingDate, outputSize: avStockTimeSeriesOutputSize, bestMatch: bestMatch);
+            }
+            else
+            {
+                Log.Error("Interval {@Interval} is not supported", interval);
+                return ExcelError.ExcelErrorNA;
+            }
+        }
+        #endregion
+
+        private static object QAV(string alphaVantageApi,
+                                  string symbol,
+                                  string info = "4. close",
+                                  int dataPointIndex = 0,
+                                  DateTime dataPointDate = default,
+                                  AvStockTimeSeriesOutputSize? outputSize = null,
+                                  bool bestMatch = false)
+        {
+            // Symbol is mandatory.
+            if (string.IsNullOrEmpty(symbol))
+            {
+                return ExcelError.ExcelErrorNA;
+            }
+
+            object stockInfo = ExcelError.ExcelErrorNA;
+
+            JObject json = null;
+
+            try
+            {
+                // Check if Alpha Vantage API Key is set, if not exit function.
+                if (!CheckApiKey())
+                {
+                    return ExcelError.ExcelErrorNA;
                 }
 
                 // If optional quoteDate parameter is set, then select the data point of given quoteDate.
                 string strTradingDate = "";
-                if (!tradingDate.Equals(new DateTime(1899, 12, 30, 00, 00, 00)) // Excel default date and time.
-                    && !tradingDate.Equals(default))
+                if (!dataPointDate.Equals(new DateTime(1899, 12, 30, 00, 00, 00)) // Excel default date and time.
+                    && !dataPointDate.Equals(default))
                 {
-                    strTradingDate = tradingDate.ToString("yyyy-MM-dd");
+                    strTradingDate = dataPointDate.ToString("yyyy-MM-dd");
                 }
                 else
                 {
                     // Select the most recent data point if 0 (default) was given.
-                    if (tradingDay != 0)
+                    if (dataPointIndex != 0)
                     {
                         // If day is negative, then select data point "current date minus <tradingDay>".
-                        if (tradingDay < 0)
+                        if (dataPointIndex < 0)
                         {
-                            strTradingDate = DateTime.Today.AddDays(tradingDay).ToString("yyyy-MM-dd");
+                            strTradingDate = DateTime.Today.AddDays(dataPointIndex).ToString("yyyy-MM-dd");
                         }
                         else
                         {
                             // Else select the data point at position <tradingDay> (zero - based index).
-                            tradingDay = tradingDay - 1;
+                            dataPointIndex = dataPointIndex - 1;
                         }
                     }
                 }
 
-                // API documentation: https://www.alphavantage.co/documentation/#daily
-                string url = URL_ALPHA_VANTAGE_QUERY + "?" + "function=" + API_FUNCTION + "&symbol=" + symbol + "&apikey=" + ApiKey;
+                // API documentation: https://www.alphavantage.co/documentation/#time-series-data
+                string url = AvUrlBuilder(alphaVantageApi, symbol: symbol, outputSize: outputSize);
                 Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
 
-                string urlContent = null;
-                if (UrlContenResult == null)
-                {
-                    urlContent = FfeWeb.GetHttpResponseContent(url);
-                    json = JObject.Parse(urlContent);
-                }
-                else // else running AVQ tests.
-                {
-                    json = JObject.Parse(UrlContenResult);
-                }
+                json = GetAvJson(url);
 
-                if (json.ContainsKey("Time Series (Daily)"))
+                // The second element/token is always a time series object with the data points, if not, something went wrong.
+                if (((JProperty)json.Children().ElementAtOrDefault(1))?.Name.Contains("Time Series") == true)
                 {
                     /* https://www.alphavantage.co/support/#support
                      * However, we ask that your language-specific library/wrapper preserves the content of our JSON/CSV responses in both success and error cases. */
                     Log.Debug("Alpha Vantage information message: {@AvInformation}", (string)json["Meta Data"]["1. Information"]);
 
-                    // Get JSON object "Time Series (Daily)" with time series data points.
-                    JToken timeSeriesDaily = json["Time Series (Daily)"];
+                    // Get "Time Series" JSON object with time series data points.
+                    JToken timeSeries = ((JProperty)json.Children().ElementAt(1)).Value;
 
                     JToken quoteDate = null;
                     if (!String.IsNullOrEmpty(strTradingDate)) // Get JSON object "Date" by given <tradingDate>.
                     {
                         Log.Debug("Get quote by trading date {@TradingDate}", strTradingDate);
-                        quoteDate = timeSeriesDaily[strTradingDate];
+                        quoteDate = timeSeries[strTradingDate];
+
+                        // Find the first trading date, that matches best.
+                        if (quoteDate == null
+                            && bestMatch)
+                        {
+                            Log.Debug("Trading date {@TradingDate} not found. Select nearest one (Best Match enabled).", strTradingDate);
+                            quoteDate = ((JProperty)timeSeries.First(td => DateTime.Parse(td.Value<JProperty>().Name) < DateTime.Parse(strTradingDate))).Value;
+                        }
                     }
                     else // Get JSON object "Date" by given index <tradingDay>.
                     {
-                        Log.Debug("Get quote by trading date index {@TradingDateIndex}", tradingDay);
-                        quoteDate = timeSeriesDaily.ElementAt(tradingDay).First;
+                        Log.Debug("Get quote by trading date index {@TradingDateIndex}", dataPointIndex + 1);
+                        quoteDate = timeSeries.ElementAtOrDefault(dataPointIndex);
+                        quoteDate = quoteDate?.First;
+
+                        // Get last trading date/data point if index is out of range.
+                        if (quoteDate == null
+                            && bestMatch)
+                        {
+                            Log.Debug("Data point at index {@TradingDateIndex} not found. Select last one (Best Match enabled).", dataPointIndex + 1);
+                            quoteDate = ((JProperty)timeSeries.Last).Value;
+                        }
                     }
 
                     if (quoteDate != null)
                     {
-                        JToken jItem = quoteDate[info];
-                        if (jItem != null)
-                        {
-                            quote = decimal.Parse((string)jItem, CultureInfo.GetCultureInfo("en-US"));
-                        }
-                        else
-                        {
-                            Log.Debug("Info {@Info} does not exists.", info);
-                        }
+                        stockInfo = GetStockInfo(quoteDate, info);
+
                     }
                     else
                     {
-                        Log.Debug("Data point {@DataPoint} not found.", (!String.IsNullOrEmpty(strTradingDate) ? strTradingDate : tradingDay.ToString()));
+                        Log.Debug("Data point {@DataPoint} not found.", (!String.IsNullOrEmpty(strTradingDate) ? strTradingDate : (dataPointIndex + 1).ToString()));
                     }
                 }
                 else
                 {
-                    string avNote = (string)json["Note"];
-                    if (!String.IsNullOrEmpty(avNote))
-                    {
-                        Log.Debug("Alpha Vantage note: {@AvNote}", avNote);
-                        if (avNote.Contains("API call frequency"))
-                        {
-                            Log.Debug("Alpha Vantage API call frequency limit has been reached. Please wait and try again later.");
-                            return AvqExcelErrorCallLimitReached();
-                        }
-                    }
-
-                    return ExcelError.ExcelErrorGettingData;
+                    return ReturnAvError(json);
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "QAVD");
-                if (json != null) { Log.Error("Alpha Vantage JSON response: {@AvResponse}", json.ToString()); }
-                return ExcelError.ExcelErrorGettingData;
+                return CatchAvException("QAV", ex, json);
             }
 
-            return quote;
-        }
-
-        public static void QueryAlphaVantageAsBatch(AvqInfo info = AvqInfo.price, bool nonContiguous = false, string namedRange = null)
-        {
-            Application excelApp = (Application)ExcelDnaUtil.Application;
-
-            try
-            {
-                excelApp.StatusBar = null;
-                excelApp.ScreenUpdating = false;
-
-                Range selection = excelApp.Selection;
-                List<Range> ranges = new List<Range>();
-
-                switch (AvqSetting.Default.BatchQueryMode)
-                {
-                    case "ddcAvqBatchQueryModeItemContiguousRange":
-                        nonContiguous = false;
-                        break;
-                    case "ddcAvqBatchQueryModeItemNonContiguousRange":
-                        nonContiguous = true;
-                        break;
-                    case "ddcAvqBatchQueryModeItemNamedRange":
-                        namedRange = AvqSetting.Default.BatchQueryNamedRange;
-                        break;
-                    default:
-                        break;
-                }
-
-                if (namedRange != null)
-                {
-                    foreach (Name name in excelApp.ActiveWorkbook.Names)
-                    {
-                        if (name.Name.Equals(namedRange)) { ranges.Add(name.RefersToRange); break; }
-                        if (namedRange.LastIndexOf("*") > 0
-                            && name.Name.Contains(namedRange.Replace("*", "")))
-                        {
-                            ranges.Add(name.RefersToRange);
-                        }
-                    }
-                }
-                else if (nonContiguous)
-                {
-                    if (selection.Areas.Count % 2 == 1) { throw new AvqException("Selection must contain even number of columns."); }
-                    foreach (Range area in selection.Areas)
-                    {
-                        if (area.Columns.Count != 1) { throw new AvqException("Combination of Contiguous and Non-Contiguous mode is not supported."); }
-                    }
-                    for (int i = 1; i <= selection.Areas.Count; i += 2)
-                    {
-                        ranges.Add(selection.Areas[i]);
-                    }
-                }
-                else
-                {
-                    foreach (Range area in selection.Areas)
-                    {
-                        if (area.Columns.Count != 2) { throw new AvqException("Combination of Non-Contiguous and Contiguous mode is not supported."); }
-                    }
-                    ranges.Add(selection);
-                }
-
-                int a = 0;
-                foreach (Range range in ranges)
-                {
-                    a += 2;
-
-                    Areas areas = range.Areas;
-
-                    foreach (Range area in areas)
-                    {
-                        if (area.Cells.Columns.Count != 2 && !nonContiguous)
-                        {
-                            throw new AvqException("Selection/Named Range must have two columns (first column with symbol, in the second the stock quote is inserted).");
-                        }
-
-                        Dictionary<string, dynamic> quotes = new Dictionary<string, dynamic>();
-
-                        string symbol = null;
-                        Range columnCells = area.Columns[1].Cells;
-                        foreach (Range cell in columnCells)
-                        {
-                            symbol = cell.Text;
-                            if (!String.IsNullOrWhiteSpace(symbol)
-                                && !quotes.ContainsKey(symbol.Trim()))
-                            {
-                                quotes.Add(symbol.Trim(), new { Value = AvqExcelError("N/A"), Timestamp = DateTimeOffset.Now });
-                            }
-                        }
-
-                        string symbols = quotes.Keys.Aggregate((i, j) => i + "," + j);
-
-                        string url = URL_ALPHA_VANTAGE_QUERY + "?" + "function=" + "BATCH_STOCK_QUOTES" + "&symbols=" + symbols + "&apikey=" + ApiKey;
-                        Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
-
-                        string urlContent = FfeWeb.GetHttpResponseContent(url);
-                        AvqBatchStockQuotes json = AvqBatchStockQuotes.FromJson(urlContent);
-
-                        if (json.Note != null && json.Note.Contains("API call frequency"))
-                        {
-                            throw new AvqApiCallFrequencyLimitException(json.Note);
-                        }
-                        if (json.ErrorMessage != null)
-                        {
-                            throw new AvqException(json.ErrorMessage);
-                        }
-                        if (json.Information != null)
-                        {
-                            throw new AvqException(json.Information);
-                        }
-
-                        if (json != null)
-                        {
-                            json.StockQuotes.ForEach(s =>
-                            {
-                                string infoValue = info == AvqInfo.price ? s.Price : s.Volume;
-                                double value = double.Parse(infoValue, CultureInfo.GetCultureInfo("en-us"));
-                                quotes[s.Symbol] = new { Value = value, s.Timestamp };
-                            });
-                        }
-
-                        for (int i = 1; i <= columnCells.Count; i++)
-                        {
-                            Range cellStock;
-                            if (!nonContiguous)
-                            {
-                                cellStock = columnCells[i, 1];
-                            }
-                            else
-                            {
-                                cellStock = selection.Areas[a - 1].Columns[1].Cells[i, 1];
-                            }
-
-                            symbol = cellStock.Text;
-                            if (!String.IsNullOrWhiteSpace(symbol))
-                            {
-                                Range cellQuote;
-                                if (!nonContiguous)
-                                {
-                                    cellQuote = columnCells[i, 2];
-                                }
-                                else
-                                {
-                                    cellQuote = selection.Areas[a].Columns[1].Cells[i, 1];
-                                }
-
-                                var quote = quotes[symbol.Trim()];
-                                cellQuote.Value = quote.Value;
-
-                                const string author = "FFE.AVQ:";
-                                Comment comment = cellQuote.Comment;
-                                if (AvqSetting.Default.BatchComment)
-                                {
-                                    if (comment == null)
-                                    {
-                                        comment = cellQuote.AddComment(author);
-                                    }
-                                    else
-                                    {
-                                        comment.Text(author);
-                                    }
-                                    DateTimeOffset timestamp = quote.Timestamp;
-                                    string commentText = "\n" + "Timestamp: " + timestamp.LocalDateTime + "\nProvider: alphavantage.co";
-                                    comment.Text(commentText, 9);
-                                    comment.Shape.TextFrame.Characters(author.Length + 1).Font.Bold = false;
-                                    comment.Shape.TextFrame.AutoSize = true;
-                                }
-                                else
-                                {
-                                    if (comment != null
-                                        && comment.Text().StartsWith(author))
-                                    {
-                                        comment.Delete();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                excelApp.StatusBar = ex.Message;
-                Log.Error(ex.Message);
-                Microsoft.VisualBasic.Interaction.MsgBox(ex.Message, MsgBoxStyle.Exclamation, ADD_IN_NAME);
-            }
-            finally
-            {
-                excelApp.ScreenUpdating = true;
-            }
+            return stockInfo;
         }
 
         private static bool CheckApiKey()
@@ -401,7 +520,7 @@ namespace FFE
                 // Send notification only once in a session.
                 if (SendMissingApiKeyMessage)
                 {
-                    Microsoft.VisualBasic.Interaction.MsgBox("Please set Alpha Vantage API Key." + "\n" + "Go to Ribbon FFE | Group AVQ -> Set Api Key." + "\n" + "Claim your free API Key here: https://www.alphavantage.co/support/#api-key", MsgBoxStyle.OkOnly, ADD_IN_NAME);
+                    Interaction.MsgBox("Please set Alpha Vantage API Key." + "\n" + "Go to Ribbon FFE | Group AVQ -> Set Api Key." + "\n" + "Claim your free API Key here: https://www.alphavantage.co/support/#api-key", MsgBoxStyle.OkOnly, ADD_IN_NAME);
                     SendMissingApiKeyMessage = false;
                 }
                 return false;
@@ -417,6 +536,119 @@ namespace FFE
             }
         }
 
+        public static string AvUrlBuilder(string api, string apiKey = null, string symbol = null, AvStockTimeSeriesOutputSize? outputSize = null, string interval = null)
+        {
+            return URL_ALPHA_VANTAGE_QUERY + "?"
+                   + $"function={api}"
+                   + (!string.IsNullOrEmpty(symbol) ? $"&symbol={symbol}" : null)
+                   + (outputSize.HasValue ? $"&outputsize={outputSize.Value}" : null)
+                   + (!string.IsNullOrEmpty(interval) ? $"&interval={interval}" : null)
+                   + $"&apikey={apiKey ?? ApiKey}";
+        }
+
+        // Avoids duplicate codes.
+        private static DateTime SubstractTradingWeek(DateTime tradingDate, int tradingWeek)
+        {
+            // Subtraction of trading week (only if no trading date is given = overruling).
+            if ((tradingDate.Equals(new DateTime(1899, 12, 30, 00, 00, 00)) // Excel default date and time.
+                || tradingDate.Equals(default))
+                && tradingWeek < 0)
+            {
+                tradingDate = DateTime.Today;
+                tradingDate = tradingDate.AddDays(tradingWeek * 7);
+            }
+            return tradingDate;
+        }
+
+        // Avoids duplicate codes.
+        private static DateTime SubstractTradingMonth(DateTime tradingDate, int tradingMonth)
+        {
+            // Subtraction of trading month (only if no trading date is given = overruling).
+            if ((tradingDate.Equals(new DateTime(1899, 12, 30, 00, 00, 00)) // Excel default date and time.
+                || tradingDate.Equals(default))
+                && tradingMonth < 0)
+            {
+                tradingDate = DateTime.Today;
+                tradingDate = tradingDate.AddMonths(tradingMonth);
+            }
+            return tradingDate;
+        }
+
+        // Avoids duplicate codes.
+        private static JObject GetAvJson(string url)
+        {
+            if (UrlContenResult == null)
+            {
+                return JObject.Parse(FfeWeb.GetHttpResponseContent(url));
+            }
+            else // else running AVQ tests.
+            {
+                return JObject.Parse(UrlContenResult);
+            }
+        }
+
+        // Avoids duplicate codes.
+        private static object GetStockInfo(JToken timeSerie, string info)
+        {
+            object stockInfo;
+
+            JToken jStockInfo = ((JProperty)timeSerie.Value<JToken>().FirstOrDefault(i => ((JProperty)i).Name.ToLower().Contains(info.ToLower()))).Value;
+            if (jStockInfo != null)
+            {
+                if (info.Contains("latest trading day"))
+                {
+                    stockInfo = DateTime.Parse((string)jStockInfo, CultureInfo.GetCultureInfo("en-US"));
+                }
+                else if (info.Contains("change percent"))
+                {
+                    stockInfo = jStockInfo.ToString();
+                    // TOOD: Divide by 100?
+                    //quote = decimal.Parse(jStockInfo.ToString().TrimEnd('%'), CultureInfo.GetCultureInfo("en-US"));
+                }
+                else
+                {
+                    stockInfo = decimal.Parse((string)jStockInfo, CultureInfo.GetCultureInfo("en-US"));
+                }
+            }
+            else
+            {
+                Log.Debug("Stock data info {@Info} not found.", info);
+                stockInfo = ExcelError.ExcelErrorNA;
+            }
+
+            return stockInfo;
+        }
+
+        // Avoids duplicate codes.
+        private static object ReturnAvError(JObject json)
+        {
+            string avNote = (string)json["Note"];
+            if (!String.IsNullOrEmpty(avNote))
+            {
+                Log.Debug("Alpha Vantage note: {@AvNote}", avNote);
+                if (avNote.Contains("API call frequency"))
+                {
+                    Log.Debug("Alpha Vantage API call frequency limit has been reached. Please wait and try again later.");
+                    return AvqExcelErrorCallLimitReached();
+                }
+            }
+
+            return ExcelError.ExcelErrorGettingData;
+        }
+
+        // Avoids duplicate codes.
+        private static object CatchAvException(string function, Exception ex, JObject json)
+        {
+            Log.Error(ex, function);
+
+            if (json != null)
+            {
+                Log.Error("Alpha Vantage JSON response: {@AvResponse}", json.ToString());
+            }
+
+            return ExcelError.ExcelErrorGettingData;
+        }
+
         public static string ApiKey
         {
             get
@@ -430,11 +662,13 @@ namespace FFE
             }
         }
 
-        public enum AvqInfo
+        #region Enumerations
+        public enum AvStockTimeSeriesOutputSize
         {
-            price,
-            volume
+            compact,
+            full
         }
+        #endregion
 
         #region AVQ Excel Errors
         public static object AvqExcelError(string errorIdentifier = null)
