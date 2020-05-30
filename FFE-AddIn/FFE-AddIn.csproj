@@ -291,7 +291,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.2.26\build\Microsoft.VisualStudio.SlowCheetah.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SlowCheetah.3.2.26\build\Microsoft.VisualStudio.SlowCheetah.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>IF EXIST "$(ProjectDir)_Build\PreBuildEvents.user.bat" "$(ProjectDir)_Build\PreBuildEvents.user.bat"
+    <PreBuildEvent>IF EXIST CALL "$(ProjectDir)_Build\PreBuildEvents.user.bat" "$(ProjectDir)_Build\PreBuildEvents.user.bat"
 
 IF NOT "$(ConfigurationName)"=="Test" "$(MSBuildBinPath)\msbuild.exe" "$(ProjectDir)_Build\TransformXml.proj" /t:$(ConfigurationName)
 
