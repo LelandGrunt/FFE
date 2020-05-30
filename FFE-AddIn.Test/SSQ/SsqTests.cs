@@ -229,7 +229,7 @@ namespace FFE
         [InlineData("IE00B4L5Y983")]
         [SsqFunction("https://www.justetf.com/de/etf-profile.html?isin={ISIN}",
                      StockIdentifierPlaceholder = "{ISIN}",
-                     XPath = "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+                     XPath = "/html/body/div/div[3]/div[7]/div[2]/div[3]/div[2]/div[2]/div[1]/div[1]/div[1]/span[2]",
                      Locale = "de-DE",
                      Parser = Parser.Auto)]
         public void SsqAttributeXPathTest(string isin)
@@ -244,7 +244,7 @@ namespace FFE
         [Theory]
         [InlineData("IE00B4L5Y983")]
         [SsqFunction("https://www.justetf.com/de/etf-profile.html?isin={ISIN}",
-                     xPath: "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+                     xPath: "/html/body/div/div[3]/div[7]/div[2]/div[3]/div[2]/div[2]/div[1]/div[1]/div[1]/span[2]",
                      StockIdentifierPlaceholder = "{ISIN}",
                      Locale = "de-DE",
                      Parser = Parser.Auto)]
@@ -280,7 +280,7 @@ namespace FFE
         [InlineData("IE00B4L5Y983")]
         [SsqFunction("https://www.justetf.com/de/etf-profile.html?isin={ISIN}",
                      StockIdentifierPlaceholder = "{ISIN}",
-                     XPath = "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+                     XPath = "/html/body/div/div[3]/div[7]/div[2]/div[3]/div[2]/div[2]/div[1]/div[1]/div[1]/span[2]",
                      RegExPattern = @"(?<quote>\d+,\d+)",
                      RegExGroupName = "quote",
                      RegExMatchIndex = 0,

@@ -106,14 +106,14 @@ namespace FFE {
                 return ResourceManager.GetString("justETF", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;Provider&quot;: {
         ///    &quot;justETF&quot;: {
         ///      &quot;Name&quot;: &quot;justETF&quot;,
         ///      &quot;Url&quot;: &quot;https://www.justetf.com/de/etf-profile.html?isin=IE00B4L5Y983&quot;,
-        ///      &quot;XPath&quot;: &quot;/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]&quot;,
+        ///      &quot;XPath&quot;: &quot;/html/body/div/div[3]/div[7]/div[2]/div[3]/div[2]/div[2]/div[1]/div[1]/div[1]/span[2]&quot;,
         ///      &quot;CssSelector&quot;: &quot;.tab-container &gt; div:nth-child(1) &gt; div:nth-child(3) &gt; div:nth-child(2) &gt; div:nth-child(2) &gt; div:nth-child(1) &gt; div:nth-child(1) &gt; div:nth-child(1) &gt; span:nth-child(2)&quot;,
         ///      &quot;RegExPattern&quot;: &quot;&lt;div class=\&quot;col-xs-6\&quot;&gt;.*?&lt;span&gt;(?&lt;qu [rest of string was truncated]&quot;;.
         /// </summary>

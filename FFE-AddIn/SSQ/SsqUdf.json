@@ -1,6 +1,6 @@
 {
-  "Version": "1.0",
-  "Version Date": "2019-12-29T00:00Z",
+  "Version": "1.1",
+  "Version Date": "2020-05-30T00:00Z",
   "Meta Data": {
     "QueryInformation": {
       "Name": "Name of User Defined Function (UDF). Mandatory.",
@@ -59,8 +59,8 @@
         "Description": "Function to get the stock price value from the justETF website.",
         "Author": "Leland Grunt",
         "Author Email": "leland.grunt@gmail.com",
-        "Version": "1.0",
-        "Version Date": "2019-12-29",
+        "Version": "1.1",
+        "Version Date": "2020-05-30",
         "Help Topic": "https://github.com/LelandGrunt/FFE",
         "Help Link": "https://github.com/LelandGrunt/FFE",
         "Provider": "justetf.com",
@@ -72,7 +72,7 @@
       "QueryParameter": {
         "Url": "https://www.justetf.com/de/etf-profile.html?isin={ISIN}",
         "StockIdentifierPlaceholder": "{ISIN}",
-        "XPath": "/html/body/div[1]/div[3]/div[7]/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/span[2]",
+        "XPath": "/html/body/div/div[3]/div[7]/div[2]/div[3]/div[2]/div[2]/div[1]/div[1]/div[1]/span[2]",
         "Locale": "de-DE",
         "Parser": "HttpClient"
       }
