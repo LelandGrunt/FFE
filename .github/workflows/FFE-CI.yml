@@ -17,7 +17,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
       
     - name: Setup VSTest.Console.exe
-      uses: malcolmnixon/Setup-VSTest@v1
+      uses: malcolmnixon/Setup-VSTest@v4
       
     - name: Restore NuGet packages
       run: nuget.exe restore .\FFE.sln
