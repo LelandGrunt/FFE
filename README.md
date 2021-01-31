@@ -71,7 +71,7 @@ The FFE Add-in currently adds in detail the following user-defined functions:
 | Openiban | QIBAN      | Query of IBANs (International Bank Account Numbers).         |
 | Openiban | QCOUNTRIES | Query of country names and codes supported by the function QIBAN. |
 
-<img src="https://raw.githubusercontent.com/LelandGrunt/FFE/master/FFE-AddIn/_Doc/Images/README.md%20-%20FFE%20Examples.png" alt="FFE Examples" width="50%" height="50%" />
+<img src="https://raw.githubusercontent.com/LelandGrunt/FFE/master/FFE-AddIn/_Doc/Images/README.md%20-%20FFE%20Examples.png" alt="FFE Examples" width="75%" height="75%" />
 
 FFE uses the [Excel-DNA](https://excel-dna.net/) library under the hood. Excel-DNA brings the full power of .NET to Excel.
 
