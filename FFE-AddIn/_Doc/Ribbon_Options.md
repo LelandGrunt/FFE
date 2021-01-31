@@ -77,8 +77,9 @@ Log files are saved in the FFE root folder (where the FFE Add-in `FFE[x32|x64].x
 * `Info`
   * `About`
     Shows the FFE Add-in *About* dialog.
+  * `FFE Changelog`
+    Opens the FFE Changelog in default browser.
   * `SSQ Changelog`
     Opens the SSQ Changelog in default browser.
-    
   * `Check for Update`
     Checks for a new FFE release.
