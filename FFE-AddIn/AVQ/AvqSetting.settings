@@ -8,6 +8,9 @@
     <Setting Name="ApiKey" Type="System.String" Scope="User">
       <Value Profile="(Default)">demo</Value>
     </Setting>
+    <Setting Name="StopRefreshAtFirstCallLimitReachedError" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="LogLevel" Type="Serilog.Events.LogEventLevel" Scope="User">
       <Value Profile="(Default)">Information</Value>
     </Setting>

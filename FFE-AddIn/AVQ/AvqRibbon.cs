@@ -22,13 +22,20 @@ namespace FFE
 
         public void RecalculateAvqCallLimitReachedError(IRibbonControl control)
         {
+            Avq.CallLimitReachedError = false;
+
             FfeExcel.FindCells((string)Avq.AvqExcelErrorCallLimitReached(), new ExcelFindOptions()
             {
                 LookIn = XlFindLookIn.xlValues,
                 LookAt = XlLookAt.xlWhole,
                 MatchCase = true
-            }).Recalculate();
-            //IDEA: Stop recalculation if current calculation returns an AvqExcelErrorCallLimitReached error?
+            }).Refresh("QAV");
+        }
+
+        public void SetStopRefreshAtFirstCallLimitReachedError(IRibbonControl control, bool pressed)
+        {
+            AvqSetting.Default.StopRefreshAtFirstCallLimitReachedError = pressed;
+            AvqSetting.Default.Save();
         }
     }
 }

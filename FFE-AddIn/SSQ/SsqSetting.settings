@@ -8,6 +8,12 @@
     <Setting Name="AutoUpdate" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="LogLevel" Type="Serilog.Events.LogEventLevel" Scope="User">
+      <Value Profile="(Default)">Debug</Value>
+    </Setting>
+    <Setting Name="EnableLogging" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
     <Setting Name="JsonUri" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://github.com/LelandGrunt/FFE/raw/master/FFE-AddIn/SSQ/SsqUdf.json</Value>
     </Setting>

@@ -11,12 +11,13 @@ namespace FFE
             Url = url;
         }
 
-        public SsqFunctionAttribute(string url, string xPath = null, string cssSelector = null, string regExPattern = null)
+        public SsqFunctionAttribute(string url, string xPath = null, string cssSelector = null, string regExPattern = null, string jsonPath = null)
         {
             Url = url;
             XPath = xPath;
             CssSelector = cssSelector;
             RegExPattern = regExPattern;
+            JsonPath = jsonPath;
         }
 
         public string Url { get; }
@@ -26,6 +27,7 @@ namespace FFE
         public string RegExPattern { get; set; } = String.Format(@"(?<quote>\d+{0}\d+)", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
         public int RegExMatchIndex { get; set; } = 0;
         public string RegExGroupName { get; set; } = "quote";
+        public string JsonPath { get; set; }
         public string Locale { get; set; } = CultureInfo.CurrentCulture.Name;
         public Parser Parser { get; set; } = Parser.Auto;
     }

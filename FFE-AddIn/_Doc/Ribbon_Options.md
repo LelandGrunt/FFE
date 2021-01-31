@@ -3,10 +3,10 @@
 FFE comes with an own Excel ribbon tab.
 The ribbon includes function specific options and general options of FFE.
 
-<img src="Images/Ribbon_Options.md - FFE Tab.png" />
+<img src="Images/Ribbon_Options.md - FFE Tab.png" width="100%" height="100%" />
 
 Extended View:
-<img src="Images/Ribbon_Options.md - FFE Tab (Extended View).png" />
+<img src="Images/Ribbon_Options.md - FFE Tab (Extended View).png" width="100%" height="100%" />
 
 The ribbon currently contains the following groups:
 
@@ -77,5 +77,8 @@ Log files are saved in the FFE root folder (where the FFE Add-in `FFE[x32|x64].x
 * `Info`
   * `About`
     Shows the FFE Add-in *About* dialog.
+  * `SSQ Changelog`
+    Opens the SSQ Changelog in default browser.
+    
   * `Check for Update`
     Checks for a new FFE release.

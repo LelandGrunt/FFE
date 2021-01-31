@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FFE-Excel-AddIn")]
-[assembly: AssemblyCopyright("Copyright © 2019-2020 Leland Grunt")]
+[assembly: AssemblyCopyright("Copyright © 2019-2021 Leland Grunt")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -42,8 +42,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.<#= this.RevisionNumber #>")]
-[assembly: AssemblyFileVersion("1.1.0.<#= this.RevisionNumber #>")]
+[assembly: AssemblyVersion("1.2.0.<#= this.RevisionNumber #>")]
+[assembly: AssemblyFileVersion("1.2.0.<#= this.RevisionNumber #>")]
 <#+
     int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2019,12,29)).TotalDays;
 #>

@@ -8,6 +8,7 @@
   <Reference Path="ExcelDna.Registration.dll" Pack="true" />
   <Reference Path="HtmlAgilityPack.dll" Pack="true" />
   <Reference Path="Newtonsoft.Json.dll" Pack="true" />
+  <Reference Path="PortableSettingsProvider.dll" Pack="true" />
   <Reference Path="Serilog.dll" Pack="true" />
   <Reference Path="Serilog.Enrichers.Thread.dll" Pack="true" />
   <Reference Path="Serilog.Exceptions.dll" Pack="true" />

@@ -8,6 +8,13 @@ namespace FFE
 {
     public static class SsqDelegate
     {
+        private static readonly ILogger log;
+
+        static SsqDelegate()
+        {
+            log = Log.ForContext("UDF", "SSQ");
+        }
+
         public static IEnumerable<SsqExcelFunction> GetSsqExcelFunctions(SsqJson ssqJson)
         {
             List<SsqExcelFunction> ssqExcelFunctions = null;
@@ -16,7 +23,7 @@ namespace FFE
             {
                 ssqExcelFunctions = new List<SsqExcelFunction>();
 
-                foreach (KeyValuePair<string, UserDefinedFunction> udf in ssqJson.UDF.Where(x => x.Value.QueryInformation.Enabled))
+                foreach (KeyValuePair<string, UserDefinedFunction> udf in GetUserDefinedFunctions(ssqJson))
                 {
                     UserDefinedFunction userDefinedFunction = udf.Value;
                     QueryInformation queryInformation = userDefinedFunction.QueryInformation;
@@ -35,7 +42,7 @@ namespace FFE
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex.Message);
+                            log.Error(ex.Message);
                             return ExcelError.ExcelErrorGettingData;
                         }
 
@@ -57,17 +64,22 @@ namespace FFE
 
                     ssqExcelFunctions.Add(new SsqExcelFunction(queryInformation.Name, excelFunction, excelFunctionAttribute, excelArgumentAttribute));
 
-                    Log.Debug("Created SSQ Excel function: {@SsqExcelFunction}", queryInformation.Name);
+                    log.Debug("Created SSQ Excel function: {@SsqExcelFunction}", queryInformation.Name);
                 }
             }
             catch (Exception ex)
             {
-                Log.Error("Exception while creating SSQ Excel functions. {@ExceptionMessage}", ex.Message);
+                log.Error("Exception while creating SSQ Excel functions. {@ExceptionMessage}", ex.Message);
 
                 throw;
             }
 
             return ssqExcelFunctions;
+        }
+
+        public static IEnumerable<KeyValuePair<string, UserDefinedFunction>> GetUserDefinedFunctions(SsqJson ssqJson)
+        {
+            return ssqJson.UDF.Where(x => x.Value.QueryInformation.Enabled);
         }
     }
 }

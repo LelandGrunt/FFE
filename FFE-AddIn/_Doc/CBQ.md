@@ -48,6 +48,6 @@ QCB\[F\](isin_wkn,[stock_exchange_code])
 ## Examples
 
 Function examples:
-<img src="Images/CBQ.md - CBQ Examples.png" style="zoom:50%;" />
+<img src="Images/CBQ.md - CBQ Examples.png" width="50%" height="50%" />
 
 <a href="Attachments/CBQ Examples.xlsx">CBQ Examples.xlsx</a>

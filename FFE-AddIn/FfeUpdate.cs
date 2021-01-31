@@ -9,6 +9,13 @@ namespace FFE
 {
     public static class FfeUpdate
     {
+        private static readonly ILogger log;
+
+        static FfeUpdate()
+        {
+            log = Log.ForContext("UDF", "FFE");
+        }
+
         public static JArray GitHubReleases
         {
             get
@@ -50,7 +57,7 @@ namespace FFE
             }
             catch (Exception)
             {
-                Log.Error("New FFE Version could not be determined on basis of release name {@FfeVersion}", name ?? "null");
+                log.Error("New FFE Version could not be determined on basis of release name {@FfeVersion}", name ?? "null");
                 throw;
             }
 

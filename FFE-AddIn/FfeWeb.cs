@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,8 @@ namespace FFE
         public bool GenerateRandomUserAgent { get; set; } = true;
 
         private static readonly HttpClient httpClient;
+
+        private static readonly ILogger log;
 
         static FfeWeb()
         {
@@ -24,6 +27,8 @@ namespace FFE
             };
 
             httpClient = new HttpClient(handler);
+
+            log = Log.ForContext("UDF", "FFE");
         }
 
         public static string GetHttpResponseContent(Uri uri, bool generateUserAgent = false)
@@ -121,7 +126,7 @@ namespace FFE
             }
             catch (Exception ex)
             {
-                FfeLogger.CreateDefaultLogger().Error(ex.Message);
+                log.Error(ex.Message);
             }
         }
         #endregion

@@ -158,6 +158,7 @@ namespace FFE
             yield return new object[] { new QAVTest { Expected = 151.3800M, Info = "adjusted close", QuoteDate = new DateTime(2019, 11, 29) } };
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "GLOBAL_QUOTE")]
         [Theory]
@@ -169,6 +170,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_DAILY")]
         [Theory]
@@ -180,6 +182,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_DAILY_ADJUSTED")]
         [Theory]
@@ -191,6 +194,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_INTRADAY")]
         [Theory]
@@ -202,6 +206,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_WEEKLY")]
         [Theory]
@@ -213,6 +218,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_WEEKLY_ADJUSTED")]
         [Theory]
@@ -224,6 +230,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_MONTHLY")]
         [Theory]
@@ -235,6 +242,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_MONTHLY_ADJUSTED")]
         [Theory]
@@ -315,6 +323,7 @@ namespace FFE
             yield return new object[] { new QAVTest { Expected = ExcelError.ExcelErrorNA, Info = "close", QuoteDate = new DateTime(DateTime.Today.Year - 1, 01, 30), BestMatch = false } };
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "GLOBAL_QUOTE")]
         [Theory]
@@ -353,6 +362,7 @@ namespace FFE
             }
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_DAILY")]
         [Theory]
@@ -372,6 +382,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_DAILY")]
         [Theory]
@@ -391,6 +402,7 @@ namespace FFE
             }
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_DAILY_ADJUSTED")]
         [Theory]
@@ -410,6 +422,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_INTRADAY")]
         [Theory]
@@ -429,6 +442,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_WEEKLY")]
         [Theory]
@@ -441,6 +455,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_WEEKLY_ADJUSTED")]
         [Theory]
@@ -453,6 +468,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_MONTHLY")]
         [Theory]
@@ -465,6 +481,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_MONTHLY")]
         [Theory]
@@ -476,6 +493,7 @@ namespace FFE
             Assert.Equal(test.Expected, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_MONTHLY_ADJUSTED")]
         [Theory]
@@ -488,6 +506,7 @@ namespace FFE
             QAVAssert(test, actual);
         }
 
+        [Trait("Version", "Release")]
         [Trait("Query", "AVQ")]
         [Trait("API", "TIME_SERIES_API")]
         [Theory]

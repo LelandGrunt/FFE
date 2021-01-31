@@ -4,7 +4,8 @@ namespace FFE
 {
     public class CbqTests
     {
-        [Trait("Query", "CBQ")]
+        [Trait("Version", "Release")]
+        [Trait("Query", "CBQ")]        
         [Theory]
         [InlineData("870747", null, null)]
         [InlineData("870747", null, "price")]

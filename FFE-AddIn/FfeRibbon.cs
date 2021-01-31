@@ -2,6 +2,7 @@
 using ExcelDna.Integration.CustomUI;
 using ExcelDna.Registration;
 using Microsoft.Office.Interop.Excel;
+using Serilog;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,15 @@ namespace FFE
     {
         private readonly Application excelApp = null;
 
+        private readonly ILogger log;
+
         private IEnumerable<string> functionNames = null;
 
         public FfeRibbon()
         {
             excelApp = (Application)ExcelDnaUtil.Application;
+
+            log = Log.ForContext("UDF", "FFE");
         }
 
         public override string GetCustomUI(string RibbonID)
@@ -31,9 +36,7 @@ namespace FFE
 
         public void RefreshSelection(IRibbonControl control)
         {
-            if (FfeExcel.IsInEditingMode()) { return; }
-
-            excelApp.Selection.CalculateRowMajorOrder();
+            Refresh(null, excelApp.Selection);
         }
 
         public void RefreshSheet(IRibbonControl control)
@@ -73,6 +76,8 @@ namespace FFE
                     return SsqSetting.Default.AutoUpdate;
                 case "tgbCheckUpdateOnStartup":
                     return FfeSetting.Default.CheckUpdateOnStartup;
+                case "cbxAvqStopRefreshAtFirstCallLimitReachedError":
+                    return AvqSetting.Default.StopRefreshAtFirstCallLimitReachedError;
                 default:
                     return false;
             }
@@ -125,6 +130,12 @@ namespace FFE
             CbqSetting.Default.LogLevel = logLevel;
             CbqSetting.Default.Save();
 
+            PlugInSetting.Default.LogLevel = logLevel;
+            PlugInSetting.Default.Save();
+
+            SsqSetting.Default.LogLevel = logLevel;
+            SsqSetting.Default.Save();
+
             Forms.MessageBox.Show("Log Level change becomes active after Excel restart.", FfeAssembly.AssemblyTitle, Forms.MessageBoxButtons.OK, Forms.MessageBoxIcon.Information);
         }
 
@@ -172,6 +183,16 @@ namespace FFE
         }
 
         public void OpenHelpLink(IRibbonControl control)
+        {
+            OpenLink(control.Tag);
+        }
+
+        public void OpenFfeChangelog(IRibbonControl control)
+        {
+            OpenLink(control.Tag);
+        }
+
+        public void OpenSsqChangelog(IRibbonControl control)
         {
             OpenLink(control.Tag);
         }
@@ -237,7 +258,7 @@ namespace FFE
         }
 
         //TODO: Convert to JSON based mapping file.
-        private Dictionary<string, LogEventLevel> DropDownItemIdToLogEventLevel = new Dictionary<string, LogEventLevel>(6)
+        private readonly Dictionary<string, LogEventLevel> DropDownItemIdToLogEventLevel = new Dictionary<string, LogEventLevel>(6)
         {
             { "ddcFfeLogLevelItemFatal", LogEventLevel.Fatal },
             { "ddcFfeLogLevelItemError", LogEventLevel.Error },
@@ -247,37 +268,82 @@ namespace FFE
             { "ddcFfeLogLevelItemVerbose", LogEventLevel.Verbose }
         };
 
-        private void Refresh(Worksheet worksheet = null, IEnumerable<string> functionNames = null)
+        private void Refresh(Worksheet worksheet = null, Range range = null, IEnumerable<string> functionNames = null)
         {
+            if (excelApp.Workbooks.Count == 0) { return; }
+            if (FfeExcel.IsInEditingMode()) { return; }
+
+            // Preserve the current selected range.
+            Range currentRange = excelApp.Selection;
+
+            // Save the current state of Excel settings.
+            var screenUpdateState = excelApp.ScreenUpdating;
+            //var statusBarState = excelApp.DisplayStatusBar;
+            var displayAlertsState = excelApp.DisplayAlerts;
+            //var eventsState = excelApp.EnableEvents;
+            // TODO: Sheet-level setting: var displayPageBreakState = excelApp.ActiveSheet.DisplayPageBreaks;
+            //var interactiveState = excelApp.Interactive;
+            //var calcState = excelApp.Calculation;
+
             try
             {
-                if (FfeExcel.IsInEditingMode()) { return; }
-
-                //excelApp.Calculate();
-                //excelApp.CalculateFull();
-                //excelApp.CalculateFullRebuild();
-
                 excelApp.ScreenUpdating = false;
+                //excelApp.DisplayStatusBar = false;
                 excelApp.DisplayAlerts = false;
+                //excelApp.EnableEvents = false;
+                // TODO: Sheet-level setting: excelApp.ActiveSheet.DisplayPageBreaks = false;
+                //excelApp.Interactive = false;
+                //excelApp.Calculation = XlCalculation.xlCalculationManual;
 
                 this.functionNames = functionNames ?? this.functionNames ?? GetFfeFunctionNames();
 
                 foreach (string functionName in this.functionNames)
                 {
+                    if (functionName.StartsWith("QAV")
+                        && AvqSetting.Default.StopRefreshAtFirstCallLimitReachedError
+                        && Avq.CallLimitReachedError)
+                    {
+                        log.Debug("(Re-)Calculation of AVQ functions were stopped due to Stop Refresh At First #AV_CALL_LIMIT_REACHED error setting.");
+
+                        // Stop recalulation for AVQ functions other than the first one found.
+                        continue;
+                    }
+
+                    List<Range> cells;
                     string formula = functionName + "(";
-                    List<Range> cells = FfeExcel.FindCellsByFormula(formula, worksheet);
+                    if (range == null)
+                    {
+                        cells = FfeExcel.FindCellsByFormula(formula, worksheet);
+                    }
+                    else
+                    {
+                        cells = FfeExcel.FindCellsInRangeByFormula(formula, range);
+                    }
+
                     if (cells.Count > 0)
                     {
                         //excelApp.StatusBar = $"Recalculate {functionName}...";
-                        FfeExcel.Recalculate(cells, functionName);
+                        FfeExcel.Refresh(cells, functionName);
                     }
                 }
             }
             finally
             {
-                excelApp.ScreenUpdating = true;
-                excelApp.DisplayAlerts = true;
+                //excelApp.Calculation = calcState;
+                //excelApp.Interactive = interactiveState;
+                // TODO: Sheet-level setting: excelApp.ActiveSheet.DisplayPageBreaks = displayPageBreakState;
+                //excelApp.EnableEvents = eventsState;
+                excelApp.DisplayAlerts = displayAlertsState;
+                //excelApp.DisplayStatusBar = statusBarState;
+                excelApp.ScreenUpdating = screenUpdateState;
+
                 //excelApp.StatusBar = null;
+
+                // Go back to the preserved selected range.
+                currentRange.Worksheet.Select();
+                currentRange.Select();
+
+                Avq.CallLimitReachedError = false;
             }
         }
 

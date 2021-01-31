@@ -1,4 +1,5 @@
-﻿using ExcelDna.Integration;
+﻿using Bluegrams.Application;
+using ExcelDna.Integration;
 using ExcelDna.Registration;
 using Serilog;
 using System;
@@ -10,6 +11,14 @@ namespace FFE
     {
         public void AutoOpen()
         {
+            PortableSettingsProvider.AllRoaming = true;
+            PortableSettingsProvider.SettingsFileName = "FFE.config";
+            PortableSettingsProvider.ApplyProvider(AvqSetting.Default);
+            PortableSettingsProvider.ApplyProvider(CbqSetting.Default);
+            PortableSettingsProvider.ApplyProvider(PlugInSetting.Default);
+            PortableSettingsProvider.ApplyProvider(SsqSetting.Default);
+            PortableSettingsProvider.ApplyProvider(FfeSetting.Default);
+
             Log.Logger = FfeLogger.CreateDefaultLogger();
 
             if (FfeSetting.Default.CheckUpdateOnStartup)

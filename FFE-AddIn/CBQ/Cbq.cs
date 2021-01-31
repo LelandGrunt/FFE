@@ -7,14 +7,15 @@ namespace FFE
 {
     public static class Cbq
     {
-        private const string ADD_IN_NAME = "CBQ";
+        private static readonly ILogger log;
 
         static Cbq()
         {
             if (CbqSetting.Default.EnableLogging)
             {
-                Log.Logger = FfeLogger.ConfigureLogging(CbqSetting.Default.LogLevel, ADD_IN_NAME)
-                                      .ForContext("UDF", typeof(Cbq));
+                string udf = "CBQ";
+                Log.Logger = FfeLogger.CreateSubLogger(udf, CbqSetting.Default.LogLevel);
+                log = Log.ForContext("UDF", udf);
             }
         }
 
@@ -69,8 +70,6 @@ namespace FFE
 
             try
             {
-                Log.Debug("Request the stock {@Info} for {@IsinWkn} from consorsbank.de", value.CbqInfo.ToString(), isin_wkn);
-
                 // Price
                 if (value.CbqInfo == CbqInfo.price)
                 {
@@ -96,7 +95,7 @@ namespace FFE
                 }
                 else
                 {
-                    Log.Error(ex.Message);
+                    log.Error(ex.Message);
                     return CbqExcelError("FORMAT_ERROR");
                 }
             }
@@ -133,9 +132,10 @@ namespace FFE
                         url = url.Replace("{EXCHANGE}", exchange);
                     }
 
-                    string xPath = CbqSetting.Default.QCB_Price_XPath_Price;
+                    log.Debug("Querying the stock info {@Info} for {@IsinWkn} from {@Provider}", cbqInfo.ToString(), isin_wkn, "consorsbank.de");
 
                     webParser = new FfeWebAngleSharp(new Uri(url));
+                    string xPath = CbqSetting.Default.QCB_Price_XPath_Price;
                     string quote = webParser.SelectByXPath(xPath);
 
                     decimal price = decimal.Parse(quote, new CultureInfo("de-DE"));
@@ -145,15 +145,15 @@ namespace FFE
             }
             catch (FormatException fex)
             {
-                Log.Error(fex.Message);
-                Log.Debug("Could not parse {@QuoteValue} to decimal type", value);
+                log.Error(fex.Message);
+                log.Debug("Could not parse {@QuoteValue} to decimal type", value);
                 return (Value: ExcelError.ExcelErrorGettingData,
                         CbqInfo: cbqInfo,
                         WebParser: null);
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                log.Error(ex.Message);
                 return (Value: ExcelError.ExcelErrorGettingData,
                         CbqInfo: cbqInfo,
                         WebParser: null);

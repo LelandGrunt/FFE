@@ -8,8 +8,17 @@ namespace FFE
 {
     public static class SsqLoader
     {
+        private static readonly ILogger log;
+
         static SsqLoader()
         {
+            if (SsqSetting.Default.EnableLogging)
+            {
+                string udf = "SSQ";
+                Log.Logger = FfeLogger.CreateSubLogger(udf, SsqSetting.Default.LogLevel);
+                log = Log.ForContext("UDF", udf);
+            }
+
             Load();
         }
 
@@ -28,7 +37,7 @@ namespace FFE
             }
             catch (Exception)
             {
-                Log.Warning("SSQ JSON file {@JsonUri} could not be loaded. Use the embedded local one.", JsonUri);
+                log.Warning("SSQ JSON file {@JsonUri} could not be loaded. Use the embedded local one.", JsonUri);
                 Json = SsqResource.SsqUdf;
             }
 
@@ -72,7 +81,7 @@ namespace FFE
                 }
             }
 
-            Log.Debug("Loaded SSQ JSON URI: {@SsqJsonUri}", uri);
+            log.Debug("Loaded SSQ JSON URI: {@SsqJsonUri}", uri);
 
             return uri;
         }
@@ -99,11 +108,12 @@ namespace FFE
             }
             else
             {
-                Log.Debug("Auto Update of SSQ JSON is disabled. Use the embedded local one.");
+                log.Debug("Auto Update of SSQ JSON is disabled. Use the embedded local one.");
                 json = SsqResource.SsqUdf;
             }
 
-            Log.Debug("Loaded SSQ JSON text: {@SsqJsonText}", json);
+            log.Debug("Loaded SSQ JSON text.", json);
+            log.Verbose("SSQ JSON text: {@SsqJsonText}", json);
 
             return json;
         }
@@ -112,7 +122,7 @@ namespace FFE
         {
             SsqJson ssqJson = SsqJson.FromJson(json);
 
-            Log.Debug("Loaded SSQ JSON object.");
+            log.Debug("Loaded SSQ JSON object.");
 
             return ssqJson;
         }
@@ -121,7 +131,7 @@ namespace FFE
         {
             IEnumerable<SsqExcelFunction> ssqExcelFunctions = SsqDelegate.GetSsqExcelFunctions(ssqJson);
 
-            Log.Debug("Loaded SSQ Excel functions.");
+            log.Debug("Loaded SSQ Excel functions.");
 
             return ssqExcelFunctions;
         }

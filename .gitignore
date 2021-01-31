@@ -330,4 +330,7 @@ ASALocalRun/
 .mfractor/
 
 # User-specific files (FFE Build)
-FFE-AddIn/_Build/*.user.bat
+FFE-AddIn/_Build/PostBuildEvents.*.bat
+FFE-AddIn/_Build/PreBuildEvents.*.bat
+!FFE-AddIn/_Build/PostBuildEvents.%USERNAME%.bat
+!FFE-AddIn/_Build/PreBuildEvents.%USERNAME%.bat

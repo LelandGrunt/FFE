@@ -12,7 +12,7 @@ namespace FFE {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class AvqSetting : global::System.Configuration.ApplicationSettingsBase {
         
         private static AvqSetting defaultInstance = ((AvqSetting)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new AvqSetting())));
@@ -44,6 +44,18 @@ namespace FFE {
             }
             set {
                 this["ApiKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StopRefreshAtFirstCallLimitReachedError {
+            get {
+                return ((bool)(this["StopRefreshAtFirstCallLimitReachedError"]));
+            }
+            set {
+                this["StopRefreshAtFirstCallLimitReachedError"] = value;
             }
         }
         

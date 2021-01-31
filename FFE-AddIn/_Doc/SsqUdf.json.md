@@ -7,16 +7,16 @@ Each user-defined function definition has two parts:
 
 1. [QueryInformation](#queryinformation):
 The first part describes the name and how the function should be displayed in Excel in the function dialog.
-   <img src="Images/SsqUdf.json.md - QueryInformation.png" style="zoom:50%;" />
+   <img src="Images/SsqUdf.json.md - QueryInformation.png" width="100%" height="100%" />
    How it looks like in the Excel function dialog:
-   <img src="Images/SsqUdf.json.md - Excel function dialog (QGF).png" style="zoom: 33%;" />
+   <img src="Images/SsqUdf.json.md - Excel function dialog (QGF).png" width="50%" height="50%" />
    `Help on this function` is linked to the website which is defined under `Help Topic.`
    The `Help Link` object is currently not used.
    The `Comment` object value is an internal comment and used in the JSON file only.
    
 2. [QueryParameter](#queryparameter):
    The second part defines the website and how the stock value should be query from it.
-   <img src="Images/SsqUdf.json.md - QueryParameter.png" style="zoom: 50%;" />
+   <img src="Images/SsqUdf.json.md - QueryParameter.png" width="50%" height="50%" />
 
 At the beginning of the [SsqUdf.json](https://raw.githubusercontent.com/LelandGrunt/FFE/master/FFE-AddIn/SSQ/SsqUdf.json) file there is an additional meta data section which describes all possible objects in `QueryInformation` and ` QueryParameter`.
 
@@ -98,10 +98,10 @@ The XPath and the CSS selector expression can normaly be copied by each modern w
 
 Other possibilities are to use browser extensions/add-ons (recommended), e.g.
 
-* Ruto - XPath Finder for [Chrome](https://chrome.google.com/webstore/detail/ruto-xpath-finder/ilcoelkkcokgeeijnopjnolmmighnppp) and [Firefox](https://addons.mozilla.org/de/firefox/addon/rutoxpath)
-* XPath Helper for [Chrome](https://chrome.google.com/webstore/detail/xpath-helper/hgimnogjllphhhkhlmebbmlgjoejdpjl)
-* ChroPath for [Chrome](https://chrome.google.com/webstore/detail/chropath/ljngjbnaijcbncmcnjfhigebomdlkcjo) and [Firefox](https://addons.mozilla.org/de/firefox/addon/chropath-for-firefox)
-* [xPath Finder](https://addons.mozilla.org/de/firefox/addon/xpath_finder/) for Firefox
+* `Ruto - XPath Finder` for [Chrome](https://chrome.google.com/webstore/detail/ruto-xpath-finder/ilcoelkkcokgeeijnopjnolmmighnppp) and [Firefox](https://addons.mozilla.org/de/firefox/addon/rutoxpath)
+* `XPath Helper` for [Chrome](https://chrome.google.com/webstore/detail/xpath-helper/hgimnogjllphhhkhlmebbmlgjoejdpjl)
+* `CSS Selector Helper` for [Chrome](https://chrome.google.com/webstore/detail/css-selector-helper-for-c/gddgceinofapfodcekopkjjelkbjodin)
+* `xPath Finder` for [Firefox](https://addons.mozilla.org/de/firefox/addon/xpath_finder/)
 
 For one query method different expressions for the same query result can be exists. Choose the one which performs the **best** and which consider **variants**. For example, XPath expressions which contains a fix currency are not working with stocks in other currencies. Or a CSS class for rising stock prices may not consider the falling stock prices.
 

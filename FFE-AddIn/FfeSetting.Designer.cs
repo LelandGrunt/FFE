@@ -12,7 +12,7 @@ namespace FFE {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class FfeSetting : global::System.Configuration.ApplicationSettingsBase {
         
         private static FfeSetting defaultInstance = ((FfeSetting)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new FfeSetting())));
@@ -20,18 +20,6 @@ namespace FFE {
         public static FfeSetting Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EnableLogging {
-            get {
-                return ((bool)(this["EnableLogging"]));
-            }
-            set {
-                this["EnableLogging"] = value;
             }
         }
         
@@ -104,18 +92,6 @@ namespace FFE {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Information")]
-        public global::Serilog.Events.LogEventLevel LogLevel {
-            get {
-                return ((global::Serilog.Events.LogEventLevel)(this["LogLevel"]));
-            }
-            set {
-                this["LogLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool LogWriteToFile {
             get {
@@ -140,6 +116,18 @@ namespace FFE {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Information")]
+        public global::Serilog.Events.LogEventLevel LogLevel {
+            get {
+                return ((global::Serilog.Events.LogEventLevel)(this["LogLevel"]));
+            }
+            set {
+                this["LogLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool CheckUpdateOnStartup {
             get {
@@ -147,6 +135,18 @@ namespace FFE {
             }
             set {
                 this["CheckUpdateOnStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableLogging {
+            get {
+                return ((bool)(this["EnableLogging"]));
+            }
+            set {
+                this["EnableLogging"] = value;
             }
         }
     }

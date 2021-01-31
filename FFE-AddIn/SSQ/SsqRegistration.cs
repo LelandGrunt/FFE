@@ -7,9 +7,11 @@ namespace FFE
 {
     public static class SsqRegistration
     {
+        private static readonly ILogger log;
+
         static SsqRegistration()
         {
-            FfeLogger.CreateDefaultLogger("SSQ");
+            log = Log.ForContext("UDF", "SSQ");
         }
 
         public static void RegisterFunctions(this IEnumerable<SsqExcelFunction> ssqExcelFunctions)
@@ -26,11 +28,11 @@ namespace FFE
                     excelFunctionAttributes.Add(ssqExcelFunction.ExcelFunctionAttribute);
                     excelArgumentAttributes.Add(ssqExcelFunction.ExcelArgumentAttributes);
 
-                    Log.Debug("Registered SSQ Excel function: {@SsqExcelFunction}", ((ExcelFunctionAttribute)ssqExcelFunction.ExcelFunctionAttribute).Name);
+                    log.Debug("Registered SSQ Excel function: {@SsqExcelFunction}", ((ExcelFunctionAttribute)ssqExcelFunction.ExcelFunctionAttribute).Name);
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Exception while registering SSQ Excel function {@SsqExcelFunction}. Message: {@ExceptionMessage}", ssqExcelFunction.Delegate.Method.Name, ex.Message);
+                    log.Error("Exception while registering SSQ Excel function {@SsqExcelFunction}. Message: {@ExceptionMessage}", ssqExcelFunction.Delegate.Method.Name, ex.Message);
                 }
             }
 

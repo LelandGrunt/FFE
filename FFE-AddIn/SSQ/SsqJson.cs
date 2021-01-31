@@ -90,6 +90,9 @@ namespace FFE
         [JsonProperty("RegExMatchIndex", NullValueHandling = NullValueHandling.Ignore)]
         public int? RegExMatchIndex { get; set; }
 
+        [JsonProperty("JsonPath", NullValueHandling = NullValueHandling.Ignore)]
+        public string JsonPath { get; set; }
+
         [JsonProperty("Locale", NullValueHandling = NullValueHandling.Ignore)]
         public string Locale { get; set; }
 
@@ -100,6 +103,13 @@ namespace FFE
 
     public partial class SsqJson
     {
+        private static readonly ILogger log;
+
+        static SsqJson()
+        {
+            log = Log.ForContext("UDF", "SSQ");
+        }
+
         public static SsqJson FromJson(string json)
         {
             try
@@ -108,7 +118,7 @@ namespace FFE
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message);
+                log.Error(ex.Message);
 
                 throw;
             }

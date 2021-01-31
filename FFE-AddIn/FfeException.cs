@@ -98,4 +98,33 @@ namespace FFE
             base.GetObjectData(info, context);
         }
     }
+
+    [Serializable]
+    public class JsonPathException : Exception
+    {
+        public string Json { get; set; }
+
+        public string JsonPath { get; set; }
+
+        public JsonPathException() { }
+
+        public JsonPathException(string message) : base(message) { }
+
+        public JsonPathException(string message, Exception innerException) : base(message, innerException) { }
+
+        protected JsonPathException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            Json = info.GetString("Json");
+            JsonPath = info.GetString("JsonPath");
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+            info.AddValue("Json", Json);
+            info.AddValue("JsonPath", JsonPath);
+            base.GetObjectData(info, context);
+        }
+    }
 }

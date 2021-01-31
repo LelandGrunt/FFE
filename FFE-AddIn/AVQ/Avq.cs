@@ -11,19 +11,23 @@ namespace FFE
 {
     public static partial class Avq
     {
-        private const string ADD_IN_NAME = "AVQ";
         private const string URL_ALPHA_VANTAGE_QUERY = "https://www.alphavantage.co/query";
+
+        public static bool CallLimitReachedError = false;
+
+        public static string UrlContenResult { private get; set; } = null;
 
         private static bool SendMissingApiKeyMessage { get; set; } = true;
 
-        public static string UrlContenResult { private get; set; } = null;
+        private static readonly ILogger log;
 
         static Avq()
         {
             if (AvqSetting.Default.EnableLogging)
             {
-                Log.Logger = FfeLogger.ConfigureLogging(AvqSetting.Default.LogLevel, ADD_IN_NAME)
-                                      .ForContext("UDF", typeof(Avq));
+                string udf = "AVQ";
+                Log.Logger = FfeLogger.CreateSubLogger(udf, AvqSetting.Default.LogLevel);
+                log = Log.ForContext("UDF", udf);
             }
         }
 
@@ -222,14 +226,16 @@ namespace FFE
                     return ExcelError.ExcelErrorNA;
                 }
 
+                log.Debug("Querying the stock info {@Info} for {@Symbol} from {@Provider}", info, symbol, "alphavantage.co");
+
                 // API documentation: https://www.alphavantage.co/documentation/#latestprice
                 string url = AvUrlBuilder("GLOBAL_QUOTE", symbol: symbol);
-                Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
+                log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
 
                 json = GetAvJson(url);
 
                 // The "Global Quote" element/token is expected, otherwise something went wrong.
-                if (((JProperty)json.Children().ElementAt(0)).Name.Equals("Global Quote"))
+                if (((JProperty)json.Children().ElementAtOrDefault(0))?.Name.Equals("Global Quote") == true)
                 {
                     JToken globalQuote = ((JProperty)json.Children().ElementAt(0)).Value;
 
@@ -277,7 +283,7 @@ namespace FFE
                 && !interval.Equals("30min")
                 && !interval.Equals("60min"))
             {
-                Log.Error("Interval {@Interval} is not supported", interval);
+                log.Error("Interval {@Interval} is not supported", interval);
                 return ExcelError.ExcelErrorNA;
             }
             else
@@ -308,14 +314,16 @@ namespace FFE
                     return ExcelError.ExcelErrorNA;
                 }
 
+                log.Debug("Querying the stock info {@Info} for {@Symbol} from {@Provider}", info, symbol, "alphavantage.co");
+
                 // API documentation: https://www.alphavantage.co/documentation/#intraday
                 string url = AvUrlBuilder("TIME_SERIES_INTRADAY", symbol: symbol, outputSize: avStockTimeSeriesOutputSize, interval: interval);
-                Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
+                log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
 
                 json = GetAvJson(url);
 
                 // The second element/token is always a time series object with the data points, if not, something went wrong.
-                if (((JProperty)json.Children().ElementAt(1)).Name.Contains("Time Series"))
+                if (((JProperty)json.Children().ElementAtOrDefault(1))?.Name.Contains("Time Series") == true)
                 {
                     JToken firstTimeSerie = ((JProperty)((JProperty)json.Children().ElementAt(1)).Value.ElementAt(dataPointIndex)).Value;
 
@@ -384,7 +392,7 @@ namespace FFE
             }
             else
             {
-                Log.Error("Interval {@Interval} is not supported", interval);
+                log.Error("Interval {@Interval} is not supported", interval);
                 return ExcelError.ExcelErrorNA;
             }
         }
@@ -441,9 +449,11 @@ namespace FFE
                     }
                 }
 
+                log.Debug("Querying the stock info {@Info} for {@Symbol} from {@Provider}", info, symbol, "alphavantage.co");
+
                 // API documentation: https://www.alphavantage.co/documentation/#time-series-data
                 string url = AvUrlBuilder(alphaVantageApi, symbol: symbol, outputSize: outputSize);
-                Log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
+                log.Debug("Alpha Vantage query URL: {@AvQueryUrl}.", url);
 
                 json = GetAvJson(url);
 
@@ -452,7 +462,7 @@ namespace FFE
                 {
                     /* https://www.alphavantage.co/support/#support
                      * However, we ask that your language-specific library/wrapper preserves the content of our JSON/CSV responses in both success and error cases. */
-                    Log.Debug("Alpha Vantage information message: {@AvInformation}", (string)json["Meta Data"]["1. Information"]);
+                    log.Debug("Alpha Vantage information message: {@AvInformation}", (string)json["Meta Data"]["1. Information"]);
 
                     // Get "Time Series" JSON object with time series data points.
                     JToken timeSeries = ((JProperty)json.Children().ElementAt(1)).Value;
@@ -460,20 +470,20 @@ namespace FFE
                     JToken quoteDate = null;
                     if (!String.IsNullOrEmpty(strTradingDate)) // Get JSON object "Date" by given <tradingDate>.
                     {
-                        Log.Debug("Get quote by trading date {@TradingDate}", strTradingDate);
+                        log.Debug("Get quote by trading date {@TradingDate}", strTradingDate);
                         quoteDate = timeSeries[strTradingDate];
 
                         // Find the first trading date, that matches best.
                         if (quoteDate == null
                             && bestMatch)
                         {
-                            Log.Debug("Trading date {@TradingDate} not found. Select nearest one (Best Match enabled).", strTradingDate);
+                            log.Debug("Trading date {@TradingDate} not found. Select nearest one (Best Match enabled).", strTradingDate);
                             quoteDate = ((JProperty)timeSeries.First(td => DateTime.Parse(td.Value<JProperty>().Name) < DateTime.Parse(strTradingDate))).Value;
                         }
                     }
                     else // Get JSON object "Date" by given index <tradingDay>.
                     {
-                        Log.Debug("Get quote by trading date index {@TradingDateIndex}", dataPointIndex + 1);
+                        log.Debug("Get quote by trading date index {@TradingDateIndex}", dataPointIndex + 1);
                         quoteDate = timeSeries.ElementAtOrDefault(dataPointIndex);
                         quoteDate = quoteDate?.First;
 
@@ -481,7 +491,7 @@ namespace FFE
                         if (quoteDate == null
                             && bestMatch)
                         {
-                            Log.Debug("Data point at index {@TradingDateIndex} not found. Select last one (Best Match enabled).", dataPointIndex + 1);
+                            log.Debug("Data point at index {@TradingDateIndex} not found. Select last one (Best Match enabled).", dataPointIndex + 1);
                             quoteDate = ((JProperty)timeSeries.Last).Value;
                         }
                     }
@@ -493,7 +503,7 @@ namespace FFE
                     }
                     else
                     {
-                        Log.Debug("Data point {@DataPoint} not found.", (!String.IsNullOrEmpty(strTradingDate) ? strTradingDate : (dataPointIndex + 1).ToString()));
+                        log.Debug("Data point {@DataPoint} not found.", (!String.IsNullOrEmpty(strTradingDate) ? strTradingDate : (dataPointIndex + 1).ToString()));
                     }
                 }
                 else
@@ -520,14 +530,14 @@ namespace FFE
                 // Send notification only once in a session.
                 if (SendMissingApiKeyMessage)
                 {
-                    Interaction.MsgBox("Please set Alpha Vantage API Key." + "\n" + "Go to Ribbon FFE | Group AVQ -> Set Api Key." + "\n" + "Claim your free API Key here: https://www.alphavantage.co/support/#api-key", MsgBoxStyle.OkOnly, ADD_IN_NAME);
+                    Interaction.MsgBox("Please set Alpha Vantage API Key." + "\n" + "Go to Ribbon FFE | Group AVQ -> Set Api Key." + "\n" + "Claim your free API Key here: https://www.alphavantage.co/support/#api-key", MsgBoxStyle.OkOnly, typeof(Avq).Name.ToUpper());
                     SendMissingApiKeyMessage = false;
                 }
                 return false;
             }
             else if (ApiKey.Equals("demo"))
             {
-                Log.Warning("Alpha Vantage API Key 'demo' works only with limited symbols. Please request your own Alpha Vantage API Key.");
+                log.Warning("Alpha Vantage API Key 'demo' works only with limited symbols. Please request your own Alpha Vantage API Key.");
                 return true;
             }
             else
@@ -612,7 +622,7 @@ namespace FFE
             }
             else
             {
-                Log.Debug("Stock data info {@Info} not found.", info);
+                log.Debug("Stock data info {@Info} not found.", info);
                 stockInfo = ExcelError.ExcelErrorNA;
             }
 
@@ -625,10 +635,12 @@ namespace FFE
             string avNote = (string)json["Note"];
             if (!String.IsNullOrEmpty(avNote))
             {
-                Log.Debug("Alpha Vantage note: {@AvNote}", avNote);
+                log.Debug("Alpha Vantage note: {@AvNote}", avNote);
                 if (avNote.Contains("API call frequency"))
                 {
-                    Log.Debug("Alpha Vantage API call frequency limit has been reached. Please wait and try again later.");
+                    CallLimitReachedError = true;
+
+                    log.Debug("Alpha Vantage API call frequency limit has been reached. Please wait and try again later.");
                     return AvqExcelErrorCallLimitReached();
                 }
             }
@@ -639,11 +651,11 @@ namespace FFE
         // Avoids duplicate codes.
         private static object CatchAvException(string function, Exception ex, JObject json)
         {
-            Log.Error(ex, function);
+            log.Error(ex, function);
 
             if (json != null)
             {
-                Log.Error("Alpha Vantage JSON response: {@AvResponse}", json.ToString());
+                log.Error("Alpha Vantage JSON response: {@AvResponse}", json.ToString());
             }
 
             return ExcelError.ExcelErrorGettingData;
@@ -675,6 +687,7 @@ namespace FFE
         {
             return "#AV" + (!String.IsNullOrEmpty(errorIdentifier) ? "_" + errorIdentifier : "");
         }
+
         public static object AvqExcelErrorCallLimitReached()
         {
             return AvqExcelError("CALL_LIMIT_REACHED");

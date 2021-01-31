@@ -11,7 +11,7 @@ The user can create his own version of this text file and thus add new or replac
 This text file must be saved under the name `SsqUdf.json` in the root folder where the FFE Add-in (FFEx32|FFEx64.xll) is located. Changes in the JSON file are applied at Excel startup or during Excel run time via the FFE  `(Re-)Register Functions` ribbon button. The error because of repeated and overwritten functions can be ignored, if existing functions want to be changed.
 
 All FFE user-defined functions are registered under the Excel function category `FFE`.
-<img src="Images/SSQ.md - Excel function category FFE.png" style="zoom:33%;" />
+<img src="Images/SSQ.md - Excel function category FFE.png" width="50%" height="50%" />
 
 
 
@@ -23,7 +23,7 @@ SSQ contains currently the following embedded functions (with example):
 | =QYF("MSFT")         | Returns the current real time stock price of Microsoft Corporation from the [Yahoo Finance](https://finance.yahoo.com) website. |
 
 SSQ downloads automatically the latest definitions from the FFE GitHub repository at Excel startup (Auto Update). The update may contain new FFE user-defined functions and/or update existing ones. This may be required, when a website changes its layout. The Auto Update function can be disabled via option `SSQ Auto Update`.
-<img src="Images/SSQ.md - SSQ Auto Update.png" style="zoom:33%;" />
+<img src="Images/SSQ.md - SSQ Auto Update.png" width="50%" height="50%" />
 
 
 
@@ -46,6 +46,6 @@ QYF(ticker)
 ## Examples
 
 Function examples:
-<img src="Images/SSQ.md - SSQ Examples.png" style="zoom:50%;" />
+<img src="Images/SSQ.md - SSQ Examples.png" width="50%" height="50%" />
 
 <a href="Attachments/SSQ Examples.xlsx">SSQ Examples.xlsx</a>

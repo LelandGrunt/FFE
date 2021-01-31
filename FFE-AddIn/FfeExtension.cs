@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 
 namespace FFE
 {
@@ -12,7 +13,18 @@ namespace FFE
             {
                 Directory.CreateDirectory(path);
             }
-            string filePath = Path.Combine(path, fileName ?? Path.GetRandomFileName());
+
+            if (fileName != null)
+            {
+                // Avoid concurrent file (write) access.
+                fileName = $"{Thread.CurrentThread.ManagedThreadId}_{fileName}";
+            }
+            else
+            {
+                fileName = Path.GetRandomFileName();
+            }
+
+            string filePath = Path.Combine(path, fileName);
             File.WriteAllText(filePath, content);
         }
     }

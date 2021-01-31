@@ -7,17 +7,17 @@ using System.Text.RegularExpressions;
 
 namespace FFE
 {
-    public class Ssq : FfeBase
+    public class Ssq : SsqLog
     {
         public readonly string UDF_NAME;
 
         #region Constructors
-        public Ssq([System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName, typeof(Ssq))
+        public Ssq([System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName)
         {
             UDF_NAME = udfName;
         }
 
-        public Ssq(Type type, [System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName, typeof(Ssq))
+        public Ssq(Type type, [System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName)
         {
             SsqFunctionAttribute ssqAttribute = (SsqFunctionAttribute)Attribute.GetCustomAttribute(type.GetMethod(udfName), typeof(SsqFunctionAttribute));
 
@@ -36,6 +36,8 @@ namespace FFE
                 RegExMatchIndex = ssqAttribute.RegExMatchIndex;
                 if (ssqAttribute.RegExGroupName != null) { RegExGroupName = ssqAttribute.RegExGroupName; }
 
+                JsonPath = ssqAttribute.JsonPath;
+
                 Culture = new CultureInfo(ssqAttribute.Locale);
 
                 Parser = ssqAttribute.Parser;
@@ -46,10 +48,11 @@ namespace FFE
                    string xPath = null,
                    string cssSelector = null,
                    string regExPattern = null, int regExMatchIndex = 0, string regExGroupName = "quote",
+                   string jsonPath = null,
                    string stockIdentifierPlaceholder = "{ISIN_TICKER_WKN}",
                    string locale = null,
                    Parser parser = Parser.Auto,
-                   [System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName, typeof(Ssq))
+                   [System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName)
         {
             UDF_NAME = udfName;
 
@@ -64,13 +67,15 @@ namespace FFE
             RegExMatchIndex = regExMatchIndex;
             RegExGroupName = regExGroupName;
 
+            JsonPath = jsonPath;
+
             Culture = new CultureInfo(locale ?? CultureInfo.CurrentCulture.Name);
 
             Parser = parser;
         }
 
         public Ssq(QueryParameter queryParameter,
-                   [System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName, typeof(Ssq))
+                   [System.Runtime.CompilerServices.CallerMemberName] string udfName = "") : base(udfName)
         {
             UDF_NAME = udfName;
 
@@ -84,6 +89,8 @@ namespace FFE
             RegExPattern = queryParameter.RegExPattern;
             RegExMatchIndex = queryParameter.RegExMatchIndex.GetValueOrDefault();
             RegExGroupName = queryParameter.RegExGroupName;
+
+            JsonPath = queryParameter.JsonPath;
 
             Culture = new CultureInfo(queryParameter.Locale ?? CultureInfo.CurrentCulture.Name);
 
@@ -107,43 +114,46 @@ namespace FFE
 
         public string RegExGroupName { get; set; } = "quote";
 
+        public string JsonPath { get; set; }
+
         public CultureInfo Culture { get; set; } = CultureInfo.CurrentCulture;
 
         public Parser Parser { get; set; } = Parser.Auto;
         #endregion
 
         #region Methods
-        public object TryQ(string wkn_isin_ticker, string info = null) { return Q(wkn_isin_ticker, info, tryQ: true); }
+        public object TryQ(string wkn_isin_ticker) { return Q(wkn_isin_ticker, tryQ: true); }
 
-        public object Q(string wkn_isin_ticker, string info = null) { return Q(wkn_isin_ticker, info, tryQ: false); }
+        public object Q(string wkn_isin_ticker) { return Q(wkn_isin_ticker, tryQ: false); }
 
-        private object Q(string stockIdentifier, string regExGroupName, bool tryQ = false)
+        private object Q(string stockIdentifier, bool tryQ)
         {
             object value;
 
             try
             {
-                Log.Debug($"UDF={UDF_NAME}" +
-                          $"; URL={Url}" +
-                          $"; XPath={XPath};" +
-                          $"; CssSelector={CssSelector};" +
-                          $"; RegExPattern={RegExPattern}; RegExMatchIndex={RegExMatchIndex}; RegExGroupName={RegExGroupName}" +
-                          $"; Culture={Culture.Name}; StockIdentifierPlaceholder={StockIdentifierPlaceholder}" +
-                          $"; Parser={Parser.ToString()}");
+                log.Verbose($"UDF={UDF_NAME}" +
+                            $"; URL={Url}" +
+                            $"; XPath={XPath};" +
+                            $"; CssSelector={CssSelector};" +
+                            $"; RegExPattern={RegExPattern}; RegExMatchIndex={RegExMatchIndex}; RegExGroupName={RegExGroupName}" +
+                            $"; JsonPath={JsonPath};" +
+                            $"; Culture={Culture.Name}; StockIdentifierPlaceholder={StockIdentifierPlaceholder}" +
+                            $"; Parser={Parser}");
 
                 RequiredAttribute.Check(this);
 
                 if (String.IsNullOrEmpty(XPath)
                     && String.IsNullOrEmpty(CssSelector)
-                    && String.IsNullOrEmpty(RegExPattern))
+                    && String.IsNullOrEmpty(RegExPattern)
+                    && String.IsNullOrEmpty(JsonPath))
                 {
-                    throw new SsqException("XPath, CSS Selector or Regular Expression is required.");
+                    throw new SsqException("XPath, CSS Selector, Regular Expression or JSON Path is required.");
                 }
 
                 if (!String.IsNullOrEmpty(RegExPattern))
                 {
-                    regExGroupName = String.IsNullOrEmpty(regExGroupName) ? RegExGroupName : regExGroupName;
-                    if (!Regex.IsMatch(RegExPattern, $@"\(\?\<{regExGroupName}\>.*\)"))
+                    if (!Regex.IsMatch(RegExPattern, $@"\(\?\<{RegExGroupName}\>.*\)"))
                     {
                         throw new SsqException("RegEx pattern must contain the RegEx group name.");
                     }
@@ -155,10 +165,13 @@ namespace FFE
                     throw new SsqException($"URL must contain stock identifier placeholder {StockIdentifierPlaceholder}");
                 }
 
+                log.Debug("Querying the stock info for {@WknIsinTicker}", stockIdentifier);
+
                 string url = Url.Replace(StockIdentifierPlaceholder, stockIdentifier);
                 var quote = FfeWebController.GetValueFromWeb(url, xPath: XPath,
                                                                   cssSelector: CssSelector,
-                                                                  regExPattern: RegExPattern, regExGroup: regExGroupName, regExMatchIndex: RegExMatchIndex,
+                                                                  regExPattern: RegExPattern, regExGroup: RegExGroupName, regExMatchIndex: RegExMatchIndex,
+                                                                  jsonPath: JsonPath,
                                                                   parser: Parser);
 
                 //TODO: Implement type converter?
@@ -176,9 +189,9 @@ namespace FFE
             }
             catch (XPathException ex)
             {
-                Log.Error(ex.Message);
-                Log.Error("XPath=" + ex.XPath);
-                Log.Error("HTML=" + ex.Html);
+                log.Error(ex.Message);
+                log.Error("XPath=" + ex.XPath);
+                log.Error("HTML=" + ex.Html);
 
                 if (tryQ)
                 {
@@ -191,9 +204,9 @@ namespace FFE
             }
             catch (CssSelectorException ex)
             {
-                Log.Error(ex.Message);
-                Log.Error("CssSelector=" + ex.CssSelector);
-                Log.Error("HTML=" + ex.Html);
+                log.Error(ex.Message);
+                log.Error("CssSelector=" + ex.CssSelector);
+                log.Error("HTML=" + ex.Html);
 
                 if (tryQ)
                 {
@@ -206,9 +219,9 @@ namespace FFE
             }
             catch (RegExException ex)
             {
-                Log.Error(ex.Message);
-                Log.Error("RegExPattern=" + ex.Pattern);
-                Log.Error("Input=" + ex.Input);
+                log.Error(ex.Message);
+                log.Error("RegExPattern=" + ex.Pattern);
+                log.Error("Input=" + ex.Input);
 
                 if (tryQ)
                 {
@@ -219,9 +232,24 @@ namespace FFE
                     throw;
                 }
             }
+            catch (JsonPathException ex)
+            {
+                log.Error(ex.Message);
+                log.Error("JsonPath=" + ex.JsonPath);
+                log.Error("JSON=" + ex.Json);
+
+                if (tryQ)
+                {
+                    return SsqExcelError("JSON_PATH_ERROR");
+                }
+                else
+                {
+                    throw;
+                }
+            }
             catch (Exception ex)
             {
-                Log.Error(string.Concat("{@ExceptionMessage}", $" {ex.InnerException.Message}"), ex.Message);
+                log.Error(string.Concat("{@ExceptionMessage}", $" {ex.InnerException?.Message}"), ex.Message);
 
                 if (tryQ)
                 {

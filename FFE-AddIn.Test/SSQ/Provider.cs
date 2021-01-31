@@ -77,19 +77,5 @@ namespace FFE
         {
             return new string[] { "MSFT", "AAPL", "FB" };
         }
-
-        public static IEnumerable<Provider> ProviderMinTestData()
-        {
-            yield return new Provider
-            {
-                UdfName = "JEQ",
-                Name = "justETF",
-                Url = new Uri("https://www.justetf.com/de/etf-profile.html?isin={ISIN_TICKER_WKN}"),
-                IsinTickerWkn = "IE00B4L5Y983",
-                XPath = "/html/body/div/div[3]/div[7]/div[2]/div[3]/div[2]/div[2]/div[1]/div[1]/div[1]/span[2]",
-                CssSelector = "div.container:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)",
-                RegExPattern = "<div class=\"col-xs-6\">.*?<span>(?<quote>\\d*,\\d*)</span>.*?</div>"
-            };
-        }
     }
 }

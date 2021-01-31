@@ -4,6 +4,8 @@
     {
         public readonly Parser Parser;
 
+        public SsqTestMethod() { }
+
         public SsqTestMethod(Parser parser)
         {
             Parser = parser;
@@ -110,6 +112,12 @@
                 Parser = Parser
             };
             return ssq.Q(provider.IsinTickerWkn);
+        }
+
+        public object SsqQueryParameterTest(QueryParameter queryParameter, string udfName, string isinTickerWkn)
+        {
+            Ssq ssq = new Ssq(queryParameter, udfName);
+            return ssq.Q(isinTickerWkn);
         }
     }
 }

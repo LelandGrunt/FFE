@@ -26,18 +26,6 @@ namespace FFE
             {
                 foreach (Provider provider in Provider.ProviderTestData())
                 {
-                    //HACK: Overwrite provider values for special cases.
-                    if (parser.Equals(Parser.AngleSharp)
-                        && provider.Name.Equals("Yahoo_Finance"))
-                    {
-                        provider.XPath = "/html/body/div[1]/div/div/div/div/div/div[2]/div/div/div/div[3]/div/div/div/div[3]/div/span";
-                    }
-                    if (parser.Equals(Parser.HttpClient)
-                        && provider.Name.Equals("Consorsbank"))
-                    {
-                        provider.XPath = "//strong[starts-with(@class,'price price-')]";
-                    }
-
                     switch (provider.StockIdentifierPlaceholder)
                     {
                         case "{WKN}":
@@ -73,9 +61,15 @@ namespace FFE
             yield return new object[] { Parser.Auto, Provider.ProviderTestData().First() };
         }
 
-        public static IEnumerable<object[]> SsqMethodMinTestData()
+        public static IEnumerable<object[]> SsqReleaseData()
         {
-            yield return new object[] { Parser.Auto, Provider.ProviderMinTestData().First() };
+            string isinTickerWkn;
+
+            foreach (KeyValuePair<string, UserDefinedFunction> udf in SsqDelegate.GetUserDefinedFunctions(SsqLoader.SsqJson))
+            {
+                isinTickerWkn = Provider.ProviderTestData().First(p => p.UdfName == udf.Key).IsinTickerWkn;
+                yield return new object[] { udf.Value.QueryParameter, udf.Key, isinTickerWkn };
+            }
         }
         #endregion
 
@@ -136,32 +130,10 @@ namespace FFE
         [Trait("Method", "XPath")]
         [Trait("SsqUse", "Constructor")]
         [Theory]
-        [MemberData(nameof(SsqMethodMinTestData))]
-        public void SsqConstructorXPathMinTest(Parser parser, Provider provider)
-        {
-            object actual = new SsqTestMethod(parser).SsqConstructorXPathMinTest(provider);
-            Assert.IsType<decimal>(actual);
-        }
-
-        [Trait("Query", "SSQ")]
-        [Trait("Method", "XPath")]
-        [Trait("SsqUse", "Constructor")]
-        [Theory]
         [MemberData(nameof(SsqMethodTestData))]
         public void SsqConstructorXPathTest(Parser parser, Provider provider)
         {
             object actual = new SsqTestMethod(parser).SsqConstructorXPathTest(provider);
-            Assert.IsType<decimal>(actual);
-        }
-
-        [Trait("Query", "SSQ")]
-        [Trait("Method", "RegEx")]
-        [Trait("SsqUse", "Constructor")]
-        [Theory]
-        [MemberData(nameof(SsqMethodMinTestData))]
-        public void SsqConstructorRegExMinTest(Parser parser, Provider provider)
-        {
-            object actual = new SsqTestMethod(parser).SsqConstructorRegExMinTest(provider);
             Assert.IsType<decimal>(actual);
         }
 
@@ -319,6 +291,16 @@ namespace FFE
         public void SsqJsonVersionDateTest()
         {
             Assert.IsType<DateTime>(SsqLoader.SsqJson.VersionDate);
+        }
+
+        [Trait("Version", "Release")]
+        [Trait("Query", "SSQ")]
+        [Theory]
+        [MemberData(nameof(SsqReleaseData))]
+        public void SsqReleaseTest(QueryParameter queryParameter, string udfName, string isinTickerWkn)
+        {
+            object actual = new SsqTestMethod().SsqQueryParameterTest(queryParameter, udfName, isinTickerWkn);
+            Assert.IsType<decimal>(actual);
         }
 
         public void Dispose()

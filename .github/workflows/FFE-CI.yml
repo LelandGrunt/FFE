@@ -26,4 +26,4 @@ jobs:
       run: msbuild.exe .\FFE.sln /p:configuration="Test" -m
       
     - name: Test FFE-AddIn.Test
-      run: vstest.console.exe **\FFE-AddIn_Test.dll
+      run: vstest.console.exe **\FFE-AddIn_Test.dll /TestCaseFilter:"Version=Release"

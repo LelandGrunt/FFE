@@ -83,7 +83,7 @@ QAVQ(symbol,[info])
 | info (optional)   | The stock info to return. Supported values are `open`, `high`, `low`, `price`, `volume`, `latest trading day`, `previous close`, `change` and `change percent` (case insensitive). Default is `price`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVQ Examples.png" />
+<img src="Images/AVQ.md - QAVQ Examples.png" width="50%" height="50%" />
 
 ------
 
@@ -112,7 +112,7 @@ QAVID(symbol,[info],[data_point_index],[interval],[output_size])
 | output_size (optional)      | The output size of the returned data points. Valid values are `compact` or `full` (case insensitive). Default is `compact`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVID Examples.png" />
+<img src="Images/AVQ.md - QAVID Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -144,7 +144,7 @@ QAVD(symbol,[info],[trading_day],[trading_date],[best_match],[output_size])
 | output_size (optional)  | The output size of the returned data points. Valid values are `compact` or `full` (case insensitive). Default is `compact`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVD Examples.png" />
+<img src="Images/AVQ.md - QAVD Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -176,7 +176,7 @@ QAVDA(symbol,[info],[trading_day],[trading_date],[best_match],[output_size])
 | output_size (optional)  | The output size of the returned data points. Valid values are `compact` or `full` (case insensitive). Default is `compact`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVDA Examples.png" />
+<img src="Images/AVQ.md - QAVDA Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -206,7 +206,7 @@ QAVW(symbol,[info],[trading_week],[trading_date],[best_match])
 | best_match (optional)   | Finds best trading data point, if no trading (week/date) argument matches. Valid values are `FALSE` (= 0) or `TRUE` (<> 0). Default is `FALSE`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVW Examples.png" />
+<img src="Images/AVQ.md - QAVW Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -236,7 +236,7 @@ QAVWA(symbol,[info],[trading_week],[trading_date],[best_match])
 | best_match (optional)   | Finds best trading data point, if no trading (week/date) argument matches. Valid values are `FALSE` (= 0) or `TRUE` (<> 0). Default is `FALSE`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVWA Examples.png" />
+<img src="Images/AVQ.md - QAVWA Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -266,7 +266,7 @@ QAVM(symbol,[info],[trading_month],[trading_date],[best_match])
 | best_match (optional)    | Finds best trading data point, if no trading (month/date) argument matches. Valid values are `FALSE` (= 0) or `TRUE` (<> 0). Default is `FALSE`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVM Examples.png" />
+<img src="Images/AVQ.md - QAVM Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -296,7 +296,7 @@ QAVMA(symbol,[info],[trading_month],[trading_date],[best_match])
 | best_match (optional)   | Finds best trading data point, if no trading (month/date) argument matches. Valid values are `FALSE` (= 0) or `TRUE` (<> 0). Default is `FALSE`. |
 
 **Examples**
-<img src="Images/AVQ.md - QAVMA Examples.png" />
+<img src="Images/AVQ.md - QAVMA Examples.png" width="100%" height="100%" />
 
 ------
 
@@ -335,7 +335,7 @@ QAVTS(symbol,[info],[interval],[trading_day],[trading_date],[adjusted],[output_s
 ^ Used for interval `daily` and [`1`\|`5`\|`15`\|`30`\|`60`]`min` only.
 
 **Examples**
-<img src="Images/AVQ.md - QAVTS Examples.png" />
+<img src="Images/AVQ.md - QAVTS Examples.png" width="100%" height="100%" />
 
 
 
@@ -348,7 +348,7 @@ The examples shown above can be downloaded <a href="Attachments/AVQ Examples.xls
 ## Best Practices
 
 1. If you retrieve the FFE formula error `#AV_CALL_LIMIT_REACHED`, then you reached the Alpha Vantage API call volume limit (of 5 requests per minute or 500 requests per day for the free service, see also [Alpha Vantage FAQs](https://www.alphavantage.co/support/#support)). For this case FFE has the `Refresh #AV-Errors` ribbon button. This button re-calculates only AVQ functions, that previously returned an #AV_-error.
-   <img src="Images/AVQ.md - Refresh AV-Errors.png" style="zoom: 33%" />
+   <img src="Images/AVQ.md - Refresh AV-Errors.png" width="10%" height="10%" />
    
    Buy a [premium API key](https://www.alphavantage.co/premium/) from Alpha Vantage with a higher API call volume for mass requests.
    Note: FFE cannot provide support for issues related to premium API keys.
@@ -370,12 +370,17 @@ The examples shown above can be downloaded <a href="Attachments/AVQ Examples.xls
 ## Options
 
 All AVQ specific options are available via the ribbon group AVQ in the ribbon tab FFE.
-<img src="Images/AVQ.md - Options.png" style="zoom:50%;" />
+<img src="Images/AVQ.md - Options.png" width="25%" height="25%" />
 
 * `Set API Key`
   Sets the Alpha Vantage API Key.
+  
+* `Stop Refresh On Error`
+  If enabled, then (re-)calculation stops at the first `#AV_CALL_LIMIT_REACHED` error.
+  
 * `Refresh #AV-Errors`
   (Re-)Calculates all AVQ user-defined functions which previously returned an FFE formula #AV_-error.
+  
 * `Help`
   * `Alpha Vantage: Homepage`
     Link to the [Alpha Vantage Homepage](https://www.alphavantage.co).
